@@ -14,7 +14,7 @@ function Searchbar({ value, placeholder, id, ...props }: SearchBarProps) {
     <label
       htmlFor={id}
       className={`
-        py-2 px-4
+        py-2.25 px-3.75
         flex gap-4
         items-center
         justify-start
