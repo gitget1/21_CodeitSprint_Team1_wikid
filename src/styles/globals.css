@@ -1,40 +1,237 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* 반응형 */
+  --breakpoint-sm: 375px;
+  --breakpoint-md: 744px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1920px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@theme {
+  /* Grayscale */
+  --color-gray-50: #ffffff;
+  --color-gray-100: #f7f7f7;
+  --color-gray-200: #e4e5f0;
+  --color-gray-300: #c6cada;
+  --color-gray-400: #8f95b2;
+  --color-gray-500: #474d66;
+  --color-gray-600: #3b415b;
+
+  /* Primary Green */
+  --color-primary-green-100: #eef9f6;
+  --color-primary-green-200: #4cbfa4;
+  --color-primary-green-300: #32a68a;
+
+  /* Secondary Colors */
+  --color-secondary-red-100: #fbeded;
+  --color-secondary-red-200: #d14343;
+  --color-secondary-purple-100: #8e66ff;
+  --color-secondary-yellow-100: #fdd181;
+}
+
+@layer components {
+  /* =========================
+     5XL
+  ========================= */
+  .text-5xl-semibold {
+    @apply text-[48px] leading-11.5 font-semibold;
+  }
+
+  /* =========================
+     4XL
+  ========================= */
+  .text-4xl-bold {
+    @apply text-[40px] leading-10.5 font-bold;
+  }
+
+  /* =========================
+     3XL
+  ========================= */
+  .text-3xl-bold {
+    @apply text-[32px] leading-11.5 font-bold;
+  }
+
+  .text-3xl-semibold {
+    @apply text-[32px] leading-10.5 font-semibold;
+  }
+
+  /* =========================
+     2XL (24px)
+  ========================= */
+  .text-2xl-bold {
+    @apply text-[24px] leading-8 font-bold;
+  }
+
+  .text-2xl-semibold {
+    @apply text-[24px] leading-8 font-semibold;
+  }
+
+  .text-2xl-medium {
+    @apply text-[24px] leading-8 font-medium;
+  }
+
+  .text-2xl-regular {
+    @apply text-[24px] leading-8 font-normal;
+  }
+
+  /* =========================
+     XL (20px)
+  ========================= */
+  .text-xl-bold {
+    @apply text-[20px] leading-8 font-bold;
+  }
+
+  .text-xl-semibold {
+    @apply text-[20px] leading-8 font-semibold;
+  }
+
+  .text-xl-medium {
+    @apply text-[20px] leading-8 font-medium;
+  }
+
+  .text-xl-regular {
+    @apply text-[20px] leading-8 font-normal;
+  }
+
+  /* =========================
+     2LG (18px)
+  ========================= */
+  .text-2lg-bold {
+    @apply text-[18px] leading-6.5 font-bold;
+  }
+
+  .text-2lg-semibold {
+    @apply text-[18px] leading-6.5 font-semibold;
+  }
+
+  .text-2lg-medium {
+    @apply text-[18px] leading-6.5 font-medium;
+  }
+
+  .text-2lg-regular {
+    @apply text-[18px] leading-6.5 font-normal;
+  }
+
+  /* =========================
+     LG (16px)
+  ========================= */
+  .text-lg-bold {
+    @apply text-[16px] leading-6.5 font-bold;
+  }
+
+  .text-lg-semibold {
+    @apply text-[16px] leading-6.5 font-semibold;
+  }
+
+  .text-lg-medium {
+    @apply text-[16px] leading-6.5 font-medium;
+  }
+
+  .text-lg-regular {
+    @apply text-[16px] leading-6.5 font-normal;
+  }
+
+  /* =========================
+     MD (14px)
+  ========================= */
+  .text-md-bold {
+    @apply text-[14px] leading-6 font-bold;
+  }
+
+  .text-md-semibold {
+    @apply text-[14px] leading-6 font-semibold;
+  }
+
+  .text-md-medium {
+    @apply text-[14px] leading-6 font-medium;
+  }
+
+  .text-md-regular {
+    @apply text-[14px] leading-6 font-normal;
+  }
+
+  /* =========================
+     SM (13px)
+  ========================= */
+  .text-sm-semibold {
+    @apply text-[13px] leading-5.5 font-semibold;
+  }
+
+  .text-sm-medium {
+    @apply text-[13px] leading-5.5 font-medium;
+  }
+
+  /* =========================
+     XS (12px)
+  ========================= */
+  .text-xs-semibold {
+    @apply text-[12px] leading-5 font-semibold;
+  }
+
+  .text-xs-medium {
+    @apply text-[12px] leading-4.5 font-medium;
+  }
+
+  .text-xs-regular {
+    @apply text-[12px] leading-4.5 font-normal;
   }
 }
+/* =========================
+     XXS (10px/8px)
+  ========================= */
+.text-xxs-bold {
+  @apply text-[10px] leading-4.5 font-bold;
+}
+.text-xxs-semibold {
+  @apply text-[10px] leading-4.5 font-semibold;
+}
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.text-xxs-medium {
+  @apply text-[8px] leading-3.5 font-medium;
+}
+
+.text-xxs-regular {
+  @apply text-[8px] leading-3.5 font-normal;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family:
     'Pretendard',
     -apple-system,
     BlinkMacSystemFont,
-    'Segoe UI',
+    system-ui,
     Roboto,
-    'Helvetica Neue',
-    Arial,
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@layer base {
+  *,
+  *::before,
+  *::after {
+    @apply m-0 p-0 box-border;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    @apply border-none outline-none bg-transparent ring-0 focus:ring-0 focus:outline-none;
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  ::placeholder {
+    @apply text-gray-400;
+  }
+
+  button {
+    cursor: pointer;
+    background: none;
+  }
+
+  a {
+    @apply text-inherit no-underline;
+  }
 }
