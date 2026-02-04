@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
@@ -13,22 +14,22 @@ const HOVER_GREEN = 'hover:text-primary-green-300';
 function Navbar() {
   //상태별 메뉴 목록 정의
   const guestMenu = [
-    { label: '위키목록', onClick: () => {} },
-    { label: '자유게시판', onClick: () => {} },
-    { label: '로그인', onClick: () => {} },
+    { label: '위키목록', href: '/wikilist' },
+    { label: '자유게시판', href: '/boards' },
+    { label: '로그인', href: '/login' },
   ];
 
   const userMenu = [
-    { label: '위키목록', onClick: () => {} },
-    { label: '자유게시판', onClick: () => {} },
-    { label: '알림', onClick: () => {} },
-    { label: '마이페이지', onClick: () => {} },
+    { label: '위키목록', href: '/wikilist' },
+    { label: '자유게시판', href: '/boards' },
+    { label: '알림', href: '/mypage' }, //알림은 클릭했을 때 어디로 가는지? 모달? 임시링크임
+    { label: '마이페이지', href: '/mypage' },
   ];
 
   const profileMenu = [
-    { label: '계정설정', onClick: () => {} },
-    { label: '내위키', onClick: () => {} },
-    { label: '로그아웃', onClick: () => setIsLoggedIn(false) },
+    { label: '계정설정', href: '/mypage' },
+    { label: '내위키', href: '/mypage' }, //임시링크임 나중에 본인 위키 해당하는 id 부여해서 다시 링크 설정
+    { label: '로그아웃', onClick: () => setIsLoggedIn(false), href: '/' }, // 로그아웃 후 홈으로 이동
   ];
 
   const [isLoggedIn, setIsLoggedIn] = useState(false); //임시 로그인 상태
@@ -57,23 +58,32 @@ function Navbar() {
   return (
     <div className="h-15 xl:h-20 px-5 lg:px-20 py-4 flex justify-between items-center">
       <div className="flex items-center justify-between gap-10">
-        <Image src={Logo} alt="logo" className="w-26.75 object-cover cursor-pointer" />
-        <button className={`hidden md:block text-gray-600 text-md-regular ${HOVER_GREEN}`}>
+        <Link href="/">
+          <Image src={Logo} alt="logo" className="w-26.75 object-cover cursor-pointer" />
+        </Link>
+        <Link
+          href="/wikilist"
+          className={`hidden md:block text-gray-600 text-md-regular ${HOVER_GREEN}`}
+        >
           위키목록
-        </button>
-        <button className={`hidden md:block text-gray-600 text-md-regular ${HOVER_GREEN}`}>
+        </Link>
+        <Link
+          href="/boards"
+          className={`hidden md:block text-gray-600 text-md-regular ${HOVER_GREEN}`}
+        >
           자유게시판
-        </button>
+        </Link>
       </div>
       <div>
         <div className="hidden md:flex items-center">
           {!isLoggedIn && (
-            <button
+            <Link
+              href="/login"
               onClick={() => setIsLoggedIn(true)} //임시 로그인 완료
               className={`text-gray-400 text-md-regular ${HOVER_GREEN}`}
             >
               로그인
-            </button>
+            </Link>
           )}
           {isLoggedIn && (
             <div className=" flex justify-center items-center gap-6">
