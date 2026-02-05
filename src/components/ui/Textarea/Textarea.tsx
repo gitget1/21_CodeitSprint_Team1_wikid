@@ -110,7 +110,7 @@ export interface PostComposerProps {
             onChange={(e) => onContentChange(e.target.value)}
             disabled={isDisabled}
             placeholder="본문을 입력해 주세요"   
-            className="font-normal pt-[12px] text-[20px] placeholder:text-[rgb(143_149_178)]  w-full  focus:ring-0 focus:outline-none "      
+            className="font-normal pt-[12px] text-[20px] resize-none placeholder:text-[rgb(143_149_178)]  w-full  focus:ring-0 focus:outline-none "      
         />
       </div>
     </div>
