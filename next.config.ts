@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+   // 2. Webpack 환경(기존)을 위한 설정
   webpack(config) {
     // 기존 svg 처리 로더 찾기
     const fileLoaderRule = config.module.rules.find((rule: any) =>
