@@ -1,11 +1,4 @@
-import BoldIcon from "@/assets/icons/ic_bold.svg"
-import AlignIcon from "@/assets/icons/ic_align.svg"
-import BulletIcon from "@/assets/icons/ic_bullet.svg"
-import ImageIcon from "@/assets/icons/ic_image.svg"
-import ItalicIcon from "@/assets/icons/ic_italic.svg"
-import NumberIcon from "@/assets/icons/ic_number.svg"
-import UnderlineIcon from "@/assets/icons/ic_underline.svg"
-import LinkIcon from "@/assets/icons/ic_link.svg"
+import Icon from "@/assets/icons/TextAreaIcon";
 export interface PostComposerProps {
   /** 값 (controlled) */
   title: string;
@@ -116,8 +109,17 @@ export interface PostComposerProps {
     </div>
     </div>
     <div className="flex justify-between border mb-[16px] px-[8px] border-gray-300 rounded-[21.5px] ">
-    <div className="flex gap-2.5"><BoldIcon/> <AlignIcon/> <BulletIcon/> <ImageIcon/> <ItalicIcon/> <NumberIcon/> <UnderlineIcon/> </div>
-     <LinkIcon/>
+    <div className="flex gap-2.5"> 
+      <Icon name="bold" />
+      <Icon name="align" />
+      <Icon name="bullet" />
+      <Icon name="image" />
+      <Icon name="italic" />
+      <Icon name="number" />
+      <Icon name="underline" />
+    </div>
+
+      <Icon name="link" />
     </div>
   </div>
   )
