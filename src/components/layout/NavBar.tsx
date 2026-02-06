@@ -2,12 +2,12 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
-import Menu from '../ui/Menu';
-
 import { BellIcon } from '@/assets/icons/Bell';
 import { UserIcon } from '@/assets/icons/User';
 import { MenuIcon } from '@/assets/icons/Menu';
 import Logo from '@/assets/images/logo.png';
+
+import Menu from '../ui/Menu';
 
 const HOVER_GREEN = 'hover:text-primary-green-300';
 

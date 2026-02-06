@@ -19,10 +19,6 @@ const EmptyState: FC<EmptyStateProps> = ({ keyword }) => {
           없어요.
         </h2>
 
-        {/* EmptyBox 사용: 
-            기존 img 태그에 있던 크기(w-27, h-27 등)와 
-            여백(mt-8.75)을 className으로 전달합니다.
-        */}
         <EmptyBox className="w-27 h-27 mt-8.75 md:w-36 md:h-36 object-contain" />
       </div>
     </div>
