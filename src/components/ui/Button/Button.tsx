@@ -70,7 +70,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading ? (
           <span className="flex items-center gap-1">
-            편집 중
+            편집중
             <span className="flex gap-[2px]">
               <span className="h-1 w-1 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
               <span className="h-1 w-1 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
