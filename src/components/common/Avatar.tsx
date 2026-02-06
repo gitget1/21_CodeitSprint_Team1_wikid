@@ -14,7 +14,7 @@ interface AvatarProps {
 const sizeMap: Record<AvatarSize, string> = {
   comment: "w-10 h-10 md:w-[50px] md:h-[50px]",
   wikiCard: "w-[60px] h-[60px] md:w-[85px] md:h-[85px]",
-  wikiDetail: "w-[62px] h-[62px] md:w-[71px] md:h-[71px] lg:w-[200px] lg:h-[200px]",
+  wikiDetail: "w-[62px] h-[62px] md:w-[71px] md:h-[71px] lg:w-50 lg:h-50",
 };
 
 export function Avatar({
