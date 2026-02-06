@@ -8,7 +8,7 @@ export const nexonGothic = localFont({
       style: 'normal',
     },
     {
-      path: '../assets/fonts/NEXONLv1GothicLowOTF.otf', // 일반형
+      path: '../assets/fonts/NEXONLv1GothicLowOTF.otf',
       weight: '400',
       style: 'normal',
     },
@@ -18,6 +18,8 @@ export const nexonGothic = localFont({
       style: 'normal',
     },
   ],
-  variable: '--font-nexon', // Tailwind 변수명
+  variable: '--font-nexon',
+  // 아래 설정을 추가하여 CSS 변수가 가리키는 실제 폰트명을 'nexonGothic'으로 고정합니다.
+  adjustFontFallback: 'Arial',
   display: 'swap',
 });
