@@ -28,6 +28,8 @@ const buttonVariants = cva(
         loginWide: 'h-[45px] w-[400px] py-[13px] px-[175px] gap-[10px] text-sm',
         // 로그인 3행: 335×45, padding 13px 175px, gap 10px
         loginNarrow: 'h-[45px] w-[335px] py-[13px] px-[175px] gap-[10px] text-sm',
+        // 편집 중: 160×45, padding 13px, gap 10px
+        editing: 'h-[45px] w-[160px] py-[13px] px-5 gap-[10px] text-sm',
         sm: 'h-10 min-w-[120px] px-5 gap-2 text-sm',
         md: 'h-[45px] min-w-[120px] px-8 gap-2 text-sm',
         lg: 'h-12 min-w-[120px] px-10 gap-2 text-base',
