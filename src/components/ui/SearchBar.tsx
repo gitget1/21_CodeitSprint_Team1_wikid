@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react';
 
-import { MagnifyIcon } from '@/assets/fonts/Magnify';
+import { MagnifyIcon } from '@/assets/icons/Magnify';
 
 interface SearchBarProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string;
