@@ -57,7 +57,7 @@ export interface ButtonProps
  * <Button>내 위키 만들기</Button>
  * <Button variant="secondary">로그인</Button>
  * <Button isLoading>편집 중</Button>
- * <Button fullWidth size="lg">로그인</Button>
+ * <Button fullWidth size="lg">로그인</Button>.
  */
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, fullWidth, isLoading, disabled, children, ...props }, ref) => {
