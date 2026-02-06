@@ -145,7 +145,7 @@ export function QuizModal({
           위키를 작성해 보세요.
         </p>
 
-        {/* 질문 */}
+        {/* 질문*/}
         <h3 className="mb-3 w-full text-left text-base font-semibold text-[#474D66]">{question}</h3>
 
         {/* 폼 */}

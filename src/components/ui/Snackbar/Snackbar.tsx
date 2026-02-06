@@ -3,6 +3,10 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
+import { ErrorIcon } from '@/assets/icons/ErrorIcon';
+import { InfoIcon } from '@/assets/icons/InfoIcon';
+import { SuccessIcon } from '@/assets/icons/SuccessIcon';
+
 // Snackbar 타입
 type SnackbarType = 'info' | 'success' | 'error';
 type SnackbarSize = 'default' | 'small';
@@ -19,54 +23,6 @@ interface SnackbarContextType {
 }
 
 const SnackbarContext = createContext<SnackbarContextType | null>(null);
-
-// 아이콘 컴포넌트들 (size prop 추가)
-const InfoIcon = ({ size = 20 }: { size?: number }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 20 20"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <circle cx="10" cy="10" r="9" stroke="#8F95B2" strokeWidth="2" />
-    <circle cx="10" cy="6" r="1" fill="#8F95B2" />
-    <rect x="9" y="9" width="2" height="6" rx="1" fill="#8F95B2" />
-  </svg>
-);
-
-const SuccessIcon = ({ size = 20 }: { size?: number }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 20 20"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <circle cx="10" cy="10" r="10" fill="#4CBFA4" />
-    <path
-      d="M6 10L9 13L14 7"
-      stroke="white"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const ErrorIcon = ({ size = 20 }: { size?: number }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 20 20"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <circle cx="10" cy="10" r="10" fill="#E46969" />
-    <rect x="9" y="5" width="2" height="6" rx="1" fill="white" />
-    <circle cx="10" cy="14" r="1" fill="white" />
-  </svg>
-);
 
 // 스타일 설정
 const snackbarConfig = {
@@ -191,8 +147,10 @@ export function SnackbarProvider({ children }: { children: ReactNode }) {
                     pointerEvents: 'auto',
                   }}
                 >
-                  <div style={{ flexShrink: 0 }}>
-                    <IconComponent size={sizes.iconSize} />
+                  <div style={{ flexShrink: 0, color: config.text }}>
+                    <IconComponent
+                      className={sizes.iconSize === 18 ? '!w-[18px] !h-[18px]' : '!w-5 !h-5'}
+                    />
                   </div>
                   <span
                     style={{
