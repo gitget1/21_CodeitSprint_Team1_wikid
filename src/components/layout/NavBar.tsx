@@ -56,7 +56,7 @@ function Navbar() {
   }, []);
 
   return (
-    <div className="h-15 xl:h-20 px-5 lg:px-20 py-4 flex justify-between items-center">
+    <div className="h-15 xl:h-20 px-5 lg:px-20 py-4 flex justify-between items-center bg-gray-50 border-b border-gray-100">
       <div className="flex items-center justify-between gap-10">
         <Link href="/">
           <Image src={Logo} alt="logo" className="w-26.75 object-cover cursor-pointer" />

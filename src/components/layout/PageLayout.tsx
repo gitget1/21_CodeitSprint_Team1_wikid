@@ -14,7 +14,7 @@ function PageLayout({ children }: PageLayoutProps) {
         <Navbar />
       </header>
 
-      <main className="flex grow w-full max-w-480 mx-auto">{children}</main>
+      <main className="flex grow w-full max-w-480 mx-auto bg-gray-50">{children}</main>
 
       <footer>
         <Footer />
