@@ -1,5 +1,6 @@
-import React, { FC } from "react";
-import EmptyBox from "@/assets/icons/EmptySearch";
+import type { FC } from 'react';
+
+import EmptyBox from '@/assets/icons/EmptySearch';
 
 interface EmptyStateProps {
   keyword: string;
@@ -8,23 +9,17 @@ interface EmptyStateProps {
 const EmptyState: FC<EmptyStateProps> = ({ keyword }) => {
   return (
     <div className="w-full flex justify-center items-center px-4">
-      
-      <div className="flex flex-col justify-center items-center text-center 
+      <div
+        className="flex flex-col justify-center items-center text-center 
                       w-68.25 h-42.25 
-                      md:w-75.75 md:h-52">
-        
+                      md:w-75.75 md:h-52"
+      >
         <h2 className="text-[18px] md:text-[20px] leading-6.5 font-medium text-gray-400">
-          <span className="text-gray-600">"{keyword}"</span>과(와) 일치하는 검색 결과가 없어요.
+          <span className="text-gray-600">&ldquo;{keyword}&rdquo;</span>과(와) 일치하는 검색 결과가
+          없어요.
         </h2>
 
-        {/* EmptyBox 사용: 
-            기존 img 태그에 있던 크기(w-27, h-27 등)와 
-            여백(mt-8.75)을 className으로 전달합니다.
-        */}
-        <EmptyBox 
-          className="w-27 h-27 mt-8.75 md:w-36 md:h-36 object-contain" 
-        />
-        
+        <EmptyBox className="w-27 h-27 mt-8.75 md:w-36 md:h-36 object-contain" />
       </div>
     </div>
   );
