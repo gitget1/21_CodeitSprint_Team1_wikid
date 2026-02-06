@@ -1,189 +1,122 @@
 'use client';
 
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { ErrorIcon } from '@/assets/icons/ErrorIcon';
+import { cn } from '@/lib/utils';
+import type {
+  SnackbarItem as SnackbarItemType,
+  SnackbarSize,
+  SnackbarType,
+} from '@/stores/snackbar.store';
+import { useSnackbarStore } from '@/stores/snackbar.store';
 import { InfoIcon } from '@/assets/icons/InfoIcon';
 import { SuccessIcon } from '@/assets/icons/SuccessIcon';
+import { ErrorIcon } from '@/assets/icons/ErrorIcon';
 
-// Snackbar 타입
-type SnackbarType = 'info' | 'success' | 'error';
-type SnackbarSize = 'default' | 'small';
-
-interface SnackbarItem {
-  id: number;
-  message: string;
-  type: SnackbarType;
-  size: SnackbarSize;
-}
-
-interface SnackbarContextType {
-  showSnackbar: (message: string, type?: SnackbarType, size?: SnackbarSize) => void;
-}
-
-const SnackbarContext = createContext<SnackbarContextType | null>(null);
-
-// 스타일 설정
-const snackbarConfig = {
+const typeConfig: Record<
+  SnackbarType,
+  {
+    Icon: typeof InfoIcon;
+    bg: string;
+    border: string;
+    text: string;
+    width: string;
+    smallWidth: string;
+  }
+> = {
   info: {
-    bg: '#F7F7FA',
-    border: '#E4E5F0',
-    text: '#474D66',
     Icon: InfoIcon,
+    bg: 'bg-gray-100',
+    border: 'border-gray-200',
+    text: 'text-gray-500',
+    width: 'w-[860px] max-w-[calc(100vw-32px)]',
+    smallWidth: 'w-max min-w-[230px] max-w-[335px]',
   },
   success: {
-    bg: '#EEF9F6',
-    border: '#4CBFA4',
-    text: '#4CBFA4',
     Icon: SuccessIcon,
+    bg: 'bg-primary-green-100',
+    border: 'border-primary-green-200',
+    text: 'text-primary-green-200',
+    width: 'w-[247px]',
+    smallWidth: 'w-max min-w-[230px]',
   },
   error: {
-    bg: '#FFEFEF',
-    border: '#E46969',
-    text: '#E46969',
     Icon: ErrorIcon,
+    bg: 'bg-secondary-red-100',
+    border: 'border-secondary-red-200',
+    text: 'text-secondary-red-200',
+    width: 'w-[384px] ',
+    smallWidth: 'w-max',
   },
 };
 
-// 사이즈별 설정 (large = default)
-const sizeConfig = {
+const sizeConfig: Record<SnackbarSize, { item: string; iconClass: string }> = {
   default: {
-    height: '50px',
-    minHeight: '50px',
-    padding: '15px 20px',
-    iconSize: 20,
-    width: {
-      info: '860px',
-      success: '247px',
-      error: '384px',
-    },
-    fontFamily: 'Pretendard',
-    fontSize: '12px',
-    lineHeight: '20px',
-    fontWeight: 600,
+    item: 'h-[50px] min-h-[50px] px-5 py-[15px] gap-2.5',
+    iconClass: 'w-5 h-5',
   },
   small: {
-    height: '42px',
-    minHeight: '42px',
-    padding: '12px 15px',
-    iconSize: 18,
-    width: {
-      info: '335px',
-      success: '230px',
-      error: '328px',
-    },
-    fontFamily: 'Pretendard',
-    fontSize: '12px',
-    lineHeight: '20px',
-    fontWeight: 600,
+    item: 'h-[42px] min-h-[42px] px-[15px] py-3 gap-2.5',
+    iconClass: 'w-[18px] h-[18px]',
   },
 };
 
-export function SnackbarProvider({ children }: { children: ReactNode }) {
-  const [snackbars, setSnackbars] = useState<SnackbarItem[]>([]);
-  const [mounted, setMounted] = useState(false);
-
-  // 하이드레이션 후에만 포털 렌더 (서버/클라이언트 HTML 일치로 hydration 오류 방지)
-  useEffect(() => {
-    const id = requestAnimationFrame(() => {
-      setMounted(true);
-    });
-    return () => cancelAnimationFrame(id);
-  }, []);
-
-  const showSnackbar = useCallback(
-    (message: string, type: SnackbarType = 'info', size: SnackbarSize = 'default') => {
-      const id = Date.now();
-      setSnackbars((prev) => [...prev, { id, message, type, size }]);
-
-      setTimeout(() => {
-        setSnackbars((prev) => prev.filter((s) => s.id !== id));
-      }, 3000);
-    },
-    []
-  );
+function SnackbarItem({ snackbar }: { snackbar: SnackbarItemType }) {
+  const config = typeConfig[snackbar.type];
+  const size = sizeConfig[snackbar.size];
+  const Icon = config.Icon;
 
   return (
-    <SnackbarContext.Provider value={{ showSnackbar }}>
-      {children}
-      {mounted &&
-        createPortal(
-          <div
-            style={{
-              position: 'fixed',
-              bottom: '24px',
-              left: '0',
-              right: '0',
-              zIndex: 9999,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '12px',
-              pointerEvents: 'none',
-            }}
-          >
-            {snackbars.map((snackbar) => {
-              const config = snackbarConfig[snackbar.type];
-              const sizes = sizeConfig[snackbar.size];
-              const IconComponent = config.Icon;
-              return (
-                <div
-                  key={snackbar.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    height: sizes.height,
-                    minHeight: sizes.minHeight,
-                    padding: sizes.padding,
-                    borderRadius: '10px',
-                    border: `1px solid ${config.border}`,
-                    backgroundColor: config.bg,
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                    width: snackbar.size === 'small' ? 'max-content' : sizes.width[snackbar.type],
-                    minWidth: snackbar.size === 'small' ? sizes.width[snackbar.type] : undefined,
-                    justifyContent: 'flex-start',
-                    pointerEvents: 'auto',
-                  }}
-                >
-                  <div style={{ flexShrink: 0, color: config.text }}>
-                    <IconComponent
-                      className={sizes.iconSize === 18 ? '!w-[18px] !h-[18px]' : '!w-5 !h-5'}
-                    />
-                  </div>
-                  <span
-                    style={{
-                      fontFamily: sizes.fontFamily,
-                      fontSize: sizes.fontSize,
-                      lineHeight: sizes.lineHeight,
-                      fontWeight: sizes.fontWeight,
-                      color: config.text,
-                      textAlign: 'left',
-                      overflow: 'visible',
-                      whiteSpace: 'nowrap',
-                      flex: snackbar.size === 'small' ? '0 1 auto' : 1,
-                      minWidth: snackbar.size === 'small' ? 'min-content' : 0,
-                    }}
-                  >
-                    {snackbar.message}
-                  </span>
-                </div>
-              );
-            })}
-          </div>,
-          document.body
-        )}
-    </SnackbarContext.Provider>
+    <div
+      className={cn(
+        'flex items-center rounded-[10px] border shadow-sm pointer-events-auto font-semibold text-xs leading-5',
+        config.bg,
+        config.border,
+        size.item,
+        snackbar.size === 'small' ? config.smallWidth : config.width
+      )}
+    >
+      <Icon className={cn(size.iconClass, config.text)} />
+      <span className={cn('whitespace-nowrap', config.text)}>{snackbar.message}</span>
+    </div>
   );
 }
 
-export function useSnackbar() {
-  const context = useContext(SnackbarContext);
-  if (!context) {
-    throw new Error('useSnackbar must be used within SnackbarProvider');
-  }
-  return context;
+/**
+ * 스낵바 목록을 body에 포털로 렌더링하는 컨테이너.
+ * _app 또는 레이아웃에 한 번만 넣으면 됨.
+ */
+export function SnackbarContainer() {
+  const snackbars = useSnackbarStore((s) => s.snackbars);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(t);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
+    <div
+      className="fixed bottom-6 left-0 right-0 z-[9999] flex flex-col items-center gap-3 pointer-events-none"
+      aria-live="polite"
+    >
+      {snackbars.map((item) => (
+        <SnackbarItem key={item.id} snackbar={item} />
+      ))}
+    </div>,
+    document.body
+  );
 }
 
-export default SnackbarProvider;
+/**
+ * Zustand 스토어 기반이라 Provider 없이 어디서든 사용 가능.
+ */
+export function useSnackbar() {
+  const showSnackbar = useSnackbarStore((s) => s.showSnackbar);
+  return { showSnackbar };
+}
+
+export default SnackbarContainer;
