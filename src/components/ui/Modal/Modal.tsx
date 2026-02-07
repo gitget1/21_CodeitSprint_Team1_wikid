@@ -1,11 +1,19 @@
 'use client';
 
-import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react';
 import { createPortal } from 'react-dom';
 
 import { CameraIcon } from '@/assets/icons/CameraIcon';
 import { CloseIcon } from '@/assets/icons/CloseIcon';
 import { LockIcon } from '@/assets/icons/LockIcon';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 import { cn } from '@/lib/utils';
 
 // 클라이언트 마운트 체크를 위한 헬퍼 함수들
@@ -34,6 +42,13 @@ export function Modal({
   className,
 }: ModalProps) {
   const isMounted = useSyncExternalStore(emptySubscribe, getSnapshot, getServerSnapshot);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleCloseOutside = useCallback(() => {
+    if (closeOnOverlayClick) onClose();
+  }, [closeOnOverlayClick, onClose]);
+
+  useOutsideClick(contentRef, handleCloseOutside);
 
   // ESC 키로 닫기
   useEffect(() => {
@@ -54,18 +69,10 @@ export function Modal({
 
   if (!isOpen || !isMounted) return null;
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget && closeOnOverlayClick) {
-      onClose();
-    }
-  };
-
   const modalContent = (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={handleOverlayClick}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div
+        ref={contentRef}
         className={cn('relative w-full max-w-[395px] rounded-xl bg-white p-6 shadow-xl', className)}
         role="dialog"
         aria-modal="true"
