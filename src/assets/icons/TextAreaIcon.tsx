@@ -1,14 +1,6 @@
-import { SVGProps } from "react";
+import { SVGProps } from 'react';
 
-type IconName =
-  | "bold"
-  | "align"
-  | "bullet"
-  | "image"
-  | "italic"
-  | "number"
-  | "underline"
-  | "link";
+type IconName = 'bold' | 'align' | 'bullet' | 'image' | 'italic' | 'number' | 'underline' | 'link';
 
 type Props = SVGProps<SVGSVGElement> & {
   name: IconName;
@@ -17,26 +9,16 @@ type Props = SVGProps<SVGSVGElement> & {
 
 export default function Icon({ name, size = 24, ...props }: Props) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      {...props}
-    >
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
       {iconPath[name]}
     </svg>
   );
 }
 
 const iconPath: Record<IconName, React.ReactNode> = {
-  bold: (
-    <path  d="M6 4h6a4 4 0 010 8H6z M6 12h7a4 4 0 010 8H6z" fill="currentColor" />
-  ),
+  bold: <path d="M6 4h6a4 4 0 010 8H6z M6 12h7a4 4 0 010 8H6z" fill="currentColor" />,
 
-  italic: (
-    <path d="M10 4h8M6 20h8M14 4L10 20" stroke="currentColor" strokeWidth="1" />
-  ),
+  italic: <path d="M10 4h8M6 20h8M14 4L10 20" stroke="currentColor" strokeWidth="1" />,
 
   underline: (
     <>
