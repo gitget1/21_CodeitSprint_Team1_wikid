@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 
 import { BellIcon } from '@/assets/icons/Bell';
 import { UserIcon } from '@/assets/icons/User';
@@ -38,25 +39,11 @@ function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (menuRef.current && !menuRef.current.contains(target)) {
-        setOpenMenu(false);
-      }
-
-      if (profileRef.current && !menuRef.current?.contains(target)) {
-        setOpenProfileMenu(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
+  useOutsideClick(menuRef, () => setOpenMenu(false));
+  useOutsideClick(profileRef, () => setOpenProfileMenu(false));
+  
   return (
-    <div className="h-15 xl:h-20 px-5 lg:px-20 py-4 flex justify-between items-center">
+    <div className="h-15 xl:h-20 px-5 lg:px-20 py-4 flex justify-between items-center bg-gray-50 border-b border-gray-100">
       <div className="flex items-center justify-between gap-10">
         <Link href="/">
           <Image src={Logo} alt="logo" className="w-26.75 object-cover cursor-pointer" />
