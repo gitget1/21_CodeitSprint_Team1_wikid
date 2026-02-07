@@ -1,9 +1,9 @@
-import React from 'react';
+import type React from 'react';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
   errorMessage?: string;
-  success?: boolean; 
+  success?: boolean;
 }
 
 const Input = ({
@@ -11,7 +11,7 @@ const Input = ({
   error = false,
   errorMessage,
   disabled = false,
-  success =false,
+  success = false,
   ...props
 }: InputProps) => {
   return (
@@ -21,8 +21,7 @@ const Input = ({
         disabled={disabled}
         className={`
           indent-[14px]  h-[45px] px-[20px]  py-[14px]  rounded-[10px] border text-sm  outline-none
-          ${ success ? 'border-[rgba(76,191,164,1)]': error  ? 'border-red-500'  : 'border-gray-300'
-    }
+          ${success ? 'border-[rgba(76,191,164,1)]' : error ? 'border-red-500' : 'border-gray-300'}
           ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
          
         `}

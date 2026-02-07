@@ -7,6 +7,9 @@ import '@/styles/globals.css';
 
 import PageLayout from '@/components/layout/PageLayout';
 
+import SnackbarContainer from '@/components/ui/Snackbar/Snackbar';
+
+
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
     () =>
@@ -24,8 +27,10 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <PageLayout>
         <Component {...pageProps} />
+        <SnackbarContainer />
       </PageLayout>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
+
   );
 }
