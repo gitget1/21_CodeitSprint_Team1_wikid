@@ -188,7 +188,6 @@
   @apply text-[10px] leading-4.5 font-semibold;
 }
 
-<<<<<<< HEAD
 .text-xxs-medium {
   @apply text-[8px] leading-3.5 font-medium;
 }
@@ -196,8 +195,6 @@
 .text-xxs-regular {
   @apply text-[8px] leading-3.5 font-normal;
 }
-=======
->>>>>>> 45a175f (resize 제거)
 
 body {
   font-family:

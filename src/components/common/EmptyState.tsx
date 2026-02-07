@@ -1,5 +1,6 @@
-import React, { FC } from "react";
-import EmptyBox from "@/assets/icons/EmptySearch";
+import type { FC } from 'react';
+
+import EmptyBox from '@/assets/icons/EmptySearch';
 
 interface EmptyStateProps {
   keyword: string;
@@ -8,8 +9,7 @@ interface EmptyStateProps {
 const EmptyState: FC<EmptyStateProps> = ({ keyword }) => {
   return (
     <div className="w-full flex justify-center items-center px-4">
-      
-      <div className="flex flex-col justify-center items-center text-center 
+     <div className="flex flex-col justify-center items-center text-center 
                       w-[273px] h-[169px] 
                       md:w-[303px] md:h-52">
         
@@ -20,7 +20,6 @@ const EmptyState: FC<EmptyStateProps> = ({ keyword }) => {
         <EmptyBox 
           className="w-27 h-27 mt-[35px] md:w-36 md:h-36 object-contain" 
         />
-        
       </div>
     </div>
   );
