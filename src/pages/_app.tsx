@@ -4,13 +4,9 @@ import type { AppProps } from 'next/app';
 import { useState } from 'react';
 
 import '@/styles/globals.css';
-
 import { nexonGothic } from "@/styles/nexonfont";
-
 import PageLayout from '@/components/layout/PageLayout';
-
-import SnackbarContainer from '@/components/ui/Snackbar/Snackbar';
-
+import { SnackbarContainer } from '@/components/ui/Snackbar/Snackbar';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
