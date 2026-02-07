@@ -1,6 +1,6 @@
 import { SVGProps } from 'react';
 
-/** 모달 닫기(X) 아이콘 */
+/** 모달 닫기(X) 아이콘*/
 export function CloseIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg

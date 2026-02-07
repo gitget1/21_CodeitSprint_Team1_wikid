@@ -1,6 +1,6 @@
 import { SVGProps } from 'react';
 
-/** 이미지 삽입/업로드용 카메라 아이콘 */
+/** 이미지 삽입/업로드용 카메라 아이콘*/
 export function CameraIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
