@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Camera } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { CameraIcon } from '@/assets/icons/CameraIcon';
+import { CloseIcon } from '@/assets/icons/CloseIcon';
 import { LockIcon } from '@/assets/icons/LockIcon';
+import { cn } from '@/lib/utils';
 
 // 클라이언트 마운트 체크를 위한 헬퍼 함수들
 const emptySubscribe = () => () => {};
@@ -76,7 +77,7 @@ export function Modal({
             className="absolute right-4 top-4 rounded-md p-1 text-[#8F95B2] hover:bg-[#F7F7FA] hover:text-[#474D66]"
             aria-label="닫기"
           >
-            <X className="h-6 w-6" />
+            <CloseIcon className="h-6 w-6" />
           </button>
         )}
 
@@ -369,7 +370,7 @@ export function ImageInsertModal({
               className="max-h-[200px] max-w-full rounded-[10px] object-contain"
             />
           ) : (
-            <Camera className="h-9 w-9 text-[#8F95B2]" />
+            <CameraIcon className="h-9 w-9 text-[#8F95B2]" />
           )}
         </button>
 
