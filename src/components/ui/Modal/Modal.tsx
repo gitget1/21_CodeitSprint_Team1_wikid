@@ -276,7 +276,7 @@ export function ConfirmModal({
               'rounded-[10px] py-[11px] text-white transition-colors',
               confirmVariant === 'danger'
                 ? 'flex h-[40px] w-[116px] items-center justify-center gap-2.5 px-5 bg-[#D14343] hover:bg-[#BC3B3B]'
-                : 'h-[40px] py-[11px] px-5 gap-[10px] font-semibold bg-[#4CBFA4] hover:bg-[#3AAA91]'
+                : 'h-[40px] min-w-[120px] py-[11px] px-5 gap-[10px] font-semibold bg-[#4CBFA4] hover:bg-[#3AAA91]'
             )}
             style={
               confirmVariant === 'danger'
