@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
+
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
+
 import { useOutsideClick } from '@/hooks/useOutsideClick';
 import { useAuthStore } from '@/stores/auth.store';
 
@@ -88,7 +90,9 @@ function Navbar() {
               로그인
             </Link>
           )}
+
           {isLoaded && isLoggedIn && (
+
             <div className=" flex justify-center items-center gap-6 ">
               <BellIcon
                 className={` text-gray-400 cursor-pointer text-md-regular ${HOVER_GREEN}`}
