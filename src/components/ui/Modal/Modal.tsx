@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 
+// Modal 아이콘 (SVGR)
 import CameraIcon from '@/assets/icons/ic_camera.svg';
 import CloseIcon from '@/assets/icons/ic_close.svg';
 import LockIcon from '@/assets/icons/ic_lock.svg';
