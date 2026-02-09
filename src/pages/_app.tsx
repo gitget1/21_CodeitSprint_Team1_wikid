@@ -5,6 +5,8 @@ import { useState } from 'react';
 
 import '@/styles/globals.css';
 
+import { nexonGothic } from "@/styles/nexonfont";
+
 import PageLayout from '@/components/layout/PageLayout';
 
 import SnackbarContainer from '@/components/ui/Snackbar/Snackbar';
@@ -25,12 +27,13 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <PageLayout>
-        <Component {...pageProps} />
-        <SnackbarContainer />
-      </PageLayout>
+      <div className={nexonGothic.variable}>
+        <PageLayout>
+          <Component {...pageProps} />
+          <SnackbarContainer />
+        </PageLayout>
+      </div>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
-
   );
 }
