@@ -40,7 +40,6 @@ export default function ViewSection() {
 
         {/* 하단 알림 영역 */}
         <div className="flex w-full gap-[10px] md:gap-[20px] mt-4 md:mt-8 items-stretch">
-          {/* 알람 아이콘 - 항상 정사각형 */}
           <div
             className="
               flex-[1]
@@ -58,7 +57,6 @@ export default function ViewSection() {
             />
           </div>
 
-          {/* 알람 메시지 - 자유 높이 (아이콘에 맞춰 늘어남) */}
           <div
             className="
               flex-[2]
