@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
-import { useOutsideClick } from '@/hooks/useOutsideClick';
+import { useRef, useState } from 'react';
 
-import { BellIcon } from '@/assets/icons/Bell';
-import { UserIcon } from '@/assets/icons/User';
-import { MenuIcon } from '@/assets/icons/Menu';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
+import BellIcon from '@/assets/icons/Bell.svg';
+import ProfileIcon from '@/assets/icons/Profile.svg';
+import MenuIcon from '@/assets/icons/Menu.svg';
 import Logo from '@/assets/images/logo.png';
 
 import Menu from '../ui/Menu';
@@ -41,12 +41,12 @@ function Navbar() {
 
   useOutsideClick(menuRef, () => setOpenMenu(false));
   useOutsideClick(profileRef, () => setOpenProfileMenu(false));
-  
+
   return (
-    <div className="h-15 xl:h-20 px-5 lg:px-20 py-4 flex justify-between items-center bg-gray-50 border-b border-gray-100">
+    <div className="h-15 xl:h-20 px-5 lg:px-20 py-4 flex justify-between items-center border-b border-gray-200">
       <div className="flex items-center justify-between gap-10">
         <Link href="/">
-          <Image src={Logo} alt="logo" className="w-26.75 object-cover cursor-pointer" />
+          <Image src={Logo} alt="logo" className="w-[107px] object-cover cursor-pointer" />
         </Link>
         <Link
           href="/wikilist"
@@ -73,10 +73,12 @@ function Navbar() {
             </Link>
           )}
           {isLoggedIn && (
-            <div className=" flex justify-center items-center gap-6">
-              <BellIcon className={`text-gray-400 cursor-pointer text-md-regular ${HOVER_GREEN}`} />
+            <div className=" flex justify-center items-center gap-6 ">
+              <BellIcon
+                className={` text-gray-400 cursor-pointer text-md-regular ${HOVER_GREEN}`}
+              />
               <div className="relative" ref={profileRef}>
-                <UserIcon
+                <ProfileIcon
                   onClick={() => setOpenProfileMenu(!openProfileMenu)}
                   className={`text-gray-400 cursor-pointer text-md-regular ${HOVER_GREEN}`}
                 />
