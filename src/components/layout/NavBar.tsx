@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
-
 import { useOutsideClick } from '@/hooks/useOutsideClick';
+
 import BellIcon from '@/assets/icons/Bell.svg';
 import ProfileIcon from '@/assets/icons/Profile.svg';
 import MenuIcon from '@/assets/icons/Menu.svg';

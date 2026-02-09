@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import Searchbar from '@/components/ui/SearchBar';
 import Button from '@/components/ui/Button/Button';
+import Searchbar from '@/components/ui/SearchBar';
 
 export default function BoardsPage() {
   const [articles, setArticles] = useState([
