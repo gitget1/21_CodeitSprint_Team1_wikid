@@ -23,8 +23,7 @@ export interface ModalProps {
 }
 
 /**
- * 위키드 공통 Modal 컴포넌트 (기본)
- */
+ * 위키드 공통 Modal 컴포넌트 (기본)*/
 export function Modal({
   isOpen,
   onClose,
