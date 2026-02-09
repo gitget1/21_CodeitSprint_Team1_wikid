@@ -17,6 +17,7 @@ function Menu({ items }: MenuProps) {
         <Link
           key={item.label}
           href={item.href || '#'}
+          onClick={item.onClick}
           className="
             py-2.5 w-full
             flex m-auto
