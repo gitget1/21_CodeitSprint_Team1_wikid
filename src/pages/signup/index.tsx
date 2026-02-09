@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 
+import useSignUp from '@/hooks/useSignUp';
 import Button from "@/components/ui/Button/Button";
 import FormInput from '@/components/common/FormInput';
 
@@ -8,7 +9,7 @@ interface SignupForm {
   name: string;
   email: string;
   password: string;
-  passwordConfirm: string;
+  passwordConfirmation: string;
 }
 
 export default function SignupPage() {
@@ -22,6 +23,7 @@ export default function SignupPage() {
   } = useForm<SignupForm>();
 
   const password = watch('password');
+  const signUp = useSignUp();
 
   return (
     <div className="flex flex-col items-center m-auto my-15">
@@ -29,7 +31,7 @@ export default function SignupPage() {
       <form
         noValidate
         className="w-84 md:w-100 flex flex-col gap-6 mt-12.5"
-        onSubmit={handleSubmit((data) => alert(JSON.stringify(data)))}
+        onSubmit={handleSubmit((data) => signUp.mutate(data))}
       >
         <FormInput<SignupForm>
           label="이름"
@@ -81,7 +83,7 @@ export default function SignupPage() {
         />
         <FormInput<SignupForm>
           label="비밀번호 확인"
-          name="passwordConfirm"
+          name="passwordConfirmation"
           type="password"
           placeholder="비밀번호를 다시 입력해주세요"
           register={register}
@@ -89,7 +91,7 @@ export default function SignupPage() {
             required: '비밀번호 확인은 필수 입력입니다.',
             validate: (value) => value === password || '비밀번호가 일치하지 않습니다.',
           }}
-          error={errors.passwordConfirm}
+          error={errors.passwordConfirmation}
           isSubmitted={isSubmitted}
         />
         <Button type="submit" disabled={isSubmitting} fullWidth size="lg" className="mt-2 h-[45px]">

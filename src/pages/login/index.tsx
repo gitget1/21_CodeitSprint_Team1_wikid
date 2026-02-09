@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 
+import useSignIn from '@/hooks/useSignIn';
 import Button from "@/components/ui/Button/Button";
 import FormInput from '@/components/common/FormInput';
 
@@ -16,13 +17,15 @@ export default function LoginPage() {
     formState: { isSubmitting, isSubmitted, errors },
   } = useForm<LoginForm>();
 
+  const signIn = useSignIn();
+
   return (
     <div className="flex flex-col items-center m-auto my-15">
       <h1 className="text-2xl-semibold text-gray-500">로그인</h1>
       <form
         noValidate
         className="w-84 md:w-100 flex flex-col gap-6 mt-12.5"
-        onSubmit={handleSubmit((data) => alert(JSON.stringify(data)))}
+        onSubmit={handleSubmit((data) => signIn.mutate(data))}
       >
         <FormInput<LoginForm>
           label="이메일"
