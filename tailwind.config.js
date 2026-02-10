@@ -3,7 +3,7 @@ const config = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      // globals.css @theme와 1:1 매핑
+      // globals.css @theme와 1:1매핑
       colors: {
         gray: {
           50: '#ffffff',
