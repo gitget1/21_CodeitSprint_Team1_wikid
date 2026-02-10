@@ -1,8 +1,7 @@
-import { nexonGothic } from "@/styles/nexonfont";
+import { nexonGothic } from '@/styles/nexonfont';
 import viewMainCard from '@/assets/images/viewMainCard.png';
 import viewBellIcon from '@/assets/images/viewBellIcon.png';
 import viewNotificationList from '@/assets/images/viewNotificationList.png';
-
 
 export default function ViewSection() {
   return (
@@ -22,7 +21,8 @@ export default function ViewSection() {
           VIEW
         </span>
         <h2 className="mt-[10px] md:mt-5 text-gray-500 text-[16px] md:text-[32px] lg:text-[50px]">
-          친구들이 달아준 내용을<br />
+          친구들이 달아준 내용을
+          <br />
           확인해 봐요
         </h2>
       </div>
@@ -31,11 +31,7 @@ export default function ViewSection() {
       <div className="w-full max-w-[924px] flex flex-col items-center">
         {/* 메인 카드 */}
         <div className="w-full mb-[10px] md:mb-[22px] lg:mb-10">
-          <img
-            src={viewMainCard.src}
-            alt="View 메인 카드"
-            className="w-full h-auto"
-          />
+          <img src={viewMainCard.src} alt="View 메인 카드" className="w-full h-auto" />
         </div>
 
         {/* 하단 알림 영역 */}
@@ -73,10 +69,8 @@ export default function ViewSection() {
               className="w-full h-full object-cover"
             />
           </div>
-
         </div>
       </div>
     </section>
   );
 }
-

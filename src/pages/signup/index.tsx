@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 
 import useSignUp from '@/hooks/useSignUp';
 import Button from "@/components/ui/Button/Button";
+
 import FormInput from '@/components/common/FormInput';
 
 interface SignupForm {
@@ -13,8 +14,6 @@ interface SignupForm {
 }
 
 export default function SignupPage() {
-
-
   const {
     register,
     handleSubmit,

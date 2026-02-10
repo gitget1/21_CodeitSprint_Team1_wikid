@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 import { useOutsideClick } from '@/hooks/useOutsideClick';
 import { useAuthStore } from '@/stores/auth.store';
 
+
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 import BellIcon from '@/assets/icons/Bell.svg';
 import ProfileIcon from '@/assets/icons/Profile.svg';
 import MenuIcon from '@/assets/icons/Menu.svg';
