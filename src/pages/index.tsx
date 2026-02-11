@@ -1,5 +1,5 @@
-import CtaSection from "@/components/Home/CtaSection";
-import ViewSection from "@/components/Home/ViewSection";
+import CtaSection from '@/components/Home/CtaSection';
+import ViewSection from '@/components/Home/ViewSection';
 
 export default function Home() {
   return (
@@ -9,4 +9,3 @@ export default function Home() {
     </div>
   );
 }
-
