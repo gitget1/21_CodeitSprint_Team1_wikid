@@ -20,7 +20,7 @@ const Dropdown = ({ options, value,className, placeholder, onChange }: DropdownP
     <div className={className}>
       <div
         onClick={() => setOpen((prev) => !prev)}
-        className=" h-[45px] px-[20px] rounded-[10px] text-sm border border-gray-300
+        className=" min-w-[120px] h-[45px] px-[20px] rounded-[10px] text-sm border border-gray-300
 bg-white flex items-center justify-between"
       >
         <span className={selected ? 'text-gray-900' : 'text-gray-400 '}>
