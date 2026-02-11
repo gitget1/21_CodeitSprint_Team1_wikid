@@ -1,8 +1,9 @@
-import { useState } from 'react';
 
-import Button from '@/components/ui/Button/Button';
-import Searchbar from '@/components/ui/SearchBar';
 
+import { useState } from "react";
+import Searchbar from "@/components/ui/SearchBar";
+import Dropdown from "@/components/ui/Dropdown/Dropdown";
+import Button from "@/components/ui/Button/Button";
 export default function BoardsPage() {
   const [articles, setArticles] = useState([
     {
@@ -45,7 +46,12 @@ export default function BoardsPage() {
       id: 4,
     },
   ]);
-
+  const [search,setSearch]=useState<string>("");
+  const sortOptions = [
+  { label: '최신순', value: 'recent' },
+  { label: '좋아요순', value: 'likes' },
+];
+  const [option, setOption] = useState<string>();
   return (
     <div className="flex flex-col justify-center">
       <div className=" flex justify-between">
@@ -73,11 +79,37 @@ export default function BoardsPage() {
                 </div>
               </div>
             </div>
-          ))}
-      </div>
-      <div>
-        <Searchbar placeholder="검색" id="1" value="w" />
-      </div>
+      ))}
+    </div>
+    <div className="flex w-fit">
+      <Searchbar placeholder="검색" id="board" value={search}/>
+     <button className="bg-[#4CBFA4] text-white hover:bg-[#3AAA91] active:bg-[#32967F]
+      inline-flex items-center justify-center whitespace-nowrap rounded-[10px] font-semibold transition-all focus-visible:outline-none
+      text-sm w-[80px] h-[45px]   ">검색</button>
+      <Dropdown value={option} options={sortOptions} className="w-[140px]" />
+          </div>
+      <table>
+  <thead>
+    <tr className="border text-[16px] font-normal text-[rgb(143_149_178)]">
+      <th >번호</th>
+      <th>제목</th>
+      <th>작성자</th>
+      <th>좋아요</th>
+      <th>날짜</th>
+    </tr>
+  </thead>
+  <tbody>
+    {articles&&articles.map((article)=>(
+      <tr className="text-[16px] font-normal text-[rgb(71_77_102)]">
+      <td>{article.id}</td>
+      <td>{article.title}</td>
+      <td>{article.writer.name}</td>
+      <td>{article.likeCount}</td>
+      <td>{article.createdAt}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
     </div>
   );
 }
