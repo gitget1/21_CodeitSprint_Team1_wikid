@@ -9,14 +9,15 @@ interface DropdownProps {
   options: Option[];
   placeholder?: string;
   value?: string;
+  className?:string;
   onChange?: (value: string) => void;
 }
 
-const Dropdown = ({ options, value, placeholder = '질문 선택', onChange }: DropdownProps) => {
+const Dropdown = ({ options, value,className, placeholder, onChange }: DropdownProps) => {
   const [open, setOpen] = useState(false);
   const selected = options.find((e) => e.value === value);
   return (
-    <div>
+    <div className={className}>
       <div
         onClick={() => setOpen((prev) => !prev)}
         className=" h-[45px] px-[20px] rounded-[10px] text-sm border border-gray-300

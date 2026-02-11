@@ -5,4 +5,5 @@ export default function AddBoardPage() {
       <p className="mt-2 text-sm text-gray-500">게시물 등록 페이지 (임시)</p>
     </div>
   );
+
 }
