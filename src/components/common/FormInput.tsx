@@ -12,7 +12,7 @@ interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
-  ({ label, type = 'text', placeholder, error, isSubmitted, className, name, ...props }, ref) => {
+  function FormInput({ label, type = 'text', placeholder, error, isSubmitted, className, name, ...props }, ref) {
     return (
       <div>
         <span className="text-md-regular text-gray-500">{label}</span>
@@ -28,6 +28,7 @@ const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
             className={`w-full ${className || ''}`}
             aria-invalid={isSubmitted ? (error ? 'true' : 'false') : undefined}
             name={name}
+            error={false}
             {...props}
           />
         </label>
@@ -40,7 +41,5 @@ const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
     );
   }
 );
-
-FormInput.displayName = 'FormInput';
 
 export default FormInput;
