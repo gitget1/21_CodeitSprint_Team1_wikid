@@ -29,6 +29,14 @@
   --color-secondary-red-200: #d14343;
   --color-secondary-purple-100: #8e66ff;
   --color-secondary-yellow-100: #fdd181;
+
+  /* 아래 body 설정은 유지하시되, 명시적으로 클래스를 쓸 수 있게 위 내용을 추가하세요 */
+  --font-pretendard: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+}
+
+/* body에 정의한 변수 적용 */
+body {
+  font-family: var(--font-pretendard);
 }
 
 @layer components {
@@ -194,16 +202,6 @@
 
 .text-xxs-regular {
   @apply text-[8px] leading-3.5 font-normal;
-}
-
-body {
-  font-family:
-    'Pretendard',
-    -apple-system,
-    BlinkMacSystemFont,
-    system-ui,
-    Roboto,
-    sans-serif;
 }
 
 @layer base {

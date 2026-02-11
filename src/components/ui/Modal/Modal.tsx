@@ -1,11 +1,21 @@
 'use client';
 
-import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react';
 import { createPortal } from 'react-dom';
-import { X, Camera } from 'lucide-react';
 
+// Modal 아이콘 (SVGR)
+import CameraIcon from '@/assets/icons/ic_camera.svg';
+import CloseIcon from '@/assets/icons/ic_close.svg';
+import LockIcon from '@/assets/icons/ic_lock.svg';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 import { cn } from '@/lib/utils';
-import { LockIcon } from '@/assets/icons/LockIcon';
 
 // 클라이언트 마운트 체크를 위한 헬퍼 함수들
 const emptySubscribe = () => () => {};
@@ -22,8 +32,7 @@ export interface ModalProps {
 }
 
 /**
- * 위키드 공통 Modal 컴포넌트 (기본)
- */
+ * 위키드 공통 Modal 컴포넌트 (기본)*/
 export function Modal({
   isOpen,
   onClose,
@@ -33,6 +42,13 @@ export function Modal({
   className,
 }: ModalProps) {
   const isMounted = useSyncExternalStore(emptySubscribe, getSnapshot, getServerSnapshot);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleCloseOutside = useCallback(() => {
+    if (closeOnOverlayClick) onClose();
+  }, [closeOnOverlayClick, onClose]);
+
+  useOutsideClick(contentRef, handleCloseOutside);
 
   // ESC 키로 닫기
   useEffect(() => {
@@ -53,18 +69,10 @@ export function Modal({
 
   if (!isOpen || !isMounted) return null;
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget && closeOnOverlayClick) {
-      onClose();
-    }
-  };
-
   const modalContent = (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={handleOverlayClick}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div
+        ref={contentRef}
         className={cn('relative w-full max-w-[395px] rounded-xl bg-white p-6 shadow-xl', className)}
         role="dialog"
         aria-modal="true"
@@ -76,7 +84,7 @@ export function Modal({
             className="absolute right-4 top-4 rounded-md p-1 text-[#8F95B2] hover:bg-[#F7F7FA] hover:text-[#474D66]"
             aria-label="닫기"
           >
-            <X className="h-6 w-6" />
+            <CloseIcon className="h-6 w-6" />
           </button>
         )}
 
@@ -276,7 +284,7 @@ export function ConfirmModal({
               'rounded-[10px] py-[11px] text-white transition-colors',
               confirmVariant === 'danger'
                 ? 'flex h-[40px] w-[116px] items-center justify-center gap-2.5 px-5 bg-[#D14343] hover:bg-[#BC3B3B]'
-                : 'h-[40px] py-[11px] px-5 gap-[10px] font-semibold bg-[#4CBFA4] hover:bg-[#3AAA91]'
+                : 'h-[40px] min-w-[120px] py-[11px] px-5 gap-[10px] font-semibold bg-[#4CBFA4] hover:bg-[#3AAA91]'
             )}
             style={
               confirmVariant === 'danger'
@@ -369,7 +377,7 @@ export function ImageInsertModal({
               className="max-h-[200px] max-w-full rounded-[10px] object-contain"
             />
           ) : (
-            <Camera className="h-9 w-9 text-[#8F95B2]" />
+            <CameraIcon className="h-9 w-9 text-[#8F95B2]" />
           )}
         </button>
 
