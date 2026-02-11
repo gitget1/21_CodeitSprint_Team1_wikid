@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 
 import Dropdown from '@/components/ui/Dropdown/Dropdown';
 import Input from '@/components/ui/Input/Input';
+import { withAuth } from '@/components/auth/withAuth';
 
-export default function Page() {
+function Page() {
   const [question, setQuestion] = useState<string | undefined>(undefined);
   const [name, setName] = useState('');
 
@@ -34,3 +35,4 @@ export default function Page() {
     </div>
   );
 }
+export default withAuth(Page);
