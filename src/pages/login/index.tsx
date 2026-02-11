@@ -1,6 +1,10 @@
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 
+import { useAuthStore } from '@/stores/auth.store';
+import useSignIn from '@/hooks/useSignIn';
 import Button from "@/components/ui/Button/Button";
 import FormInput from '@/components/common/FormInput';
 
@@ -15,6 +19,24 @@ export default function LoginPage() {
     handleSubmit,
     formState: { isSubmitting, isSubmitted, errors },
   } = useForm<LoginForm>();
+  const signIn = useSignIn();
+  const router = useRouter();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const [isLoaded, setIsLoaded] = useState(false);
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.replace('/');
+    } else {
+      setIsLoaded(true);
+    }
+  },[isLoggedIn, router]);
+
+  if (!isLoaded || isLoggedIn) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div>Loading...</div>
+      </div> 
+  )};
 
   return (
     <div className="flex flex-col items-center m-auto my-15">
@@ -22,7 +44,7 @@ export default function LoginPage() {
       <form
         noValidate
         className="w-84 md:w-100 flex flex-col gap-6 mt-12.5"
-        onSubmit={handleSubmit((data) => alert(JSON.stringify(data)))}
+        onSubmit={handleSubmit((data) => signIn.mutate(data))}
       >
         <FormInput<LoginForm>
           label="이메일"
@@ -66,3 +88,4 @@ export default function LoginPage() {
     </div>
   );
 }
+ 
