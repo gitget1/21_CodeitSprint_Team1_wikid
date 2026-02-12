@@ -14,7 +14,7 @@ export default function ShareSection() {
         w-full flex justify-center flex-col items-center
         
         py-[100px] md:py-[160px] 
-        lg:py-[200px]
+        lg:py-[200px] 
         
       `}
       style={{ fontFamily: nexonGothic.style.fontFamily }}>
