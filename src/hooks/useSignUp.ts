@@ -2,13 +2,13 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { AxiosError } from 'axios';
 
-import { authApi, SignUpRequest } from '@/api/auth.api';
+import { signUp, type SignUpRequest } from '@/api/auth.api';
 
 export default function useSignUp() {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (data: SignUpRequest) => authApi.signUp(data),
+    mutationFn: (data: SignUpRequest) => signUp(data),
     onSuccess: () => {
       alert('회원가입이 완료되었습니다.');
       router.push('/login');

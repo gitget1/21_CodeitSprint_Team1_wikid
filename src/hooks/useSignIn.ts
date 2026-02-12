@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { AxiosError } from 'axios';
 
-import { authApi, SignInRequest } from '@/api/auth.api';
+import { signIn, type SignInRequest } from '@/api/auth.api';
 import { useAuthStore } from '@/stores/auth.store';
 
 export default function useSignIn() {
@@ -10,9 +10,9 @@ export default function useSignIn() {
   const setLogin = useAuthStore((state) => state.setLogin);
 
   return useMutation({
-    mutationFn: (data: SignInRequest) => authApi.signIn(data),
-    onSuccess: (response) => {
-      setLogin(response.data);
+    mutationFn: (data: SignInRequest) => signIn(data),
+    onSuccess: (data) => {
+      setLogin(data);
       router.push('/');
     },
     onError: (error: AxiosError<{ message: string }>) => {
