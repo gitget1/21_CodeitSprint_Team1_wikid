@@ -12,7 +12,8 @@ interface MenuProps {
 }
 
 function Menu({ items, onClose }: MenuProps) {
-  const handleClick = (itemOnClick?: () => void) => {
+  const handleClick = (e: React.MouseEvent, itemOnClick?: () => void) => {
+    e.stopPropagation();
     if (itemOnClick) {
       itemOnClick();
     }
@@ -22,12 +23,16 @@ function Menu({ items, onClose }: MenuProps) {
   };
 
   return (
-    <div className="w-30 bg-gray-50 rounded-[10px] absolute top-9.25 right-0 shadow-lg overflow-hidden z-1">
+    <div 
+      className="w-30 bg-gray-50 rounded-[10px] absolute top-9.25 right-0 shadow-lg overflow-hidden z-50"
+      onMouseDown={(e) => e.stopPropagation()}
+    >
       {items.map((item) => (
         <Link
           key={item.label}
           href={item.href || '#'}
-          onClick={() => handleClick(item.onClick)}
+          onClick={(e) => handleClick(e, item.onClick)}
+          onMouseDown={(e) => e.stopPropagation()}
           className="
             py-2.5 w-full
             flex m-auto
