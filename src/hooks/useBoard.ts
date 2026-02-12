@@ -12,7 +12,7 @@ export default function useArticles() {
       setLoading(true);
       setError(null);
 
-      const data = await getArticles({
+      const data = await boardApi.getArticles({
         page: 1,
         pageSize: 10,
         orderBy: 'recent',
