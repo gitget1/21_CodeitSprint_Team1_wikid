@@ -8,16 +8,26 @@ interface MenuItem {
 
 interface MenuProps {
   items: MenuItem[];
+  onClose?: () => void;
 }
 
-function Menu({ items }: MenuProps) {
+function Menu({ items, onClose }: MenuProps) {
+  const handleClick = (itemOnClick?: () => void) => {
+    if (itemOnClick) {
+      itemOnClick();
+    }
+    if (onClose) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="w-30 bg-gray-50 rounded-[10px] absolute top-9.25 right-0 shadow-lg overflow-hidden">
+    <div className="w-30 bg-gray-50 rounded-[10px] absolute top-9.25 right-0 shadow-lg overflow-hidden z-1">
       {items.map((item) => (
         <Link
           key={item.label}
           href={item.href || '#'}
-          onClick={item.onClick}
+          onClick={() => handleClick(item.onClick)}
           className="
             py-2.5 w-full
             flex m-auto
