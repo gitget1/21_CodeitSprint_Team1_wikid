@@ -14,7 +14,8 @@ export default function useArticles() {
 
       const data = await boardApi.getArticles({
         page: 1,
-        pageSize: 1000,
+        pageSize: 10,
+
         orderBy: 'recent',
         keyword: '',
       });
