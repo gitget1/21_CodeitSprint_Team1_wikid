@@ -21,20 +21,23 @@ export type {
 /**
  * 회원가입 (POST /auth/signUp)
  */
-export const signUp = (body: SignUpRequest) => {
-  return instance.post<AuthResponse>('/auth/signUp', body);
+export const signUp = async (body: SignUpRequest): Promise<AuthResponse> => {
+  const response = await instance.post<AuthResponse>('/auth/signUp', body);
+  return response.data;
 };
 
 /**
  * 로그인 (POST /auth/signIn)
  */
-export const signIn = (body: SignInRequest) => {
-  return instance.post<AuthResponse>('/auth/signIn', body);
+export const signIn = async (body: SignInRequest): Promise<AuthResponse> => {
+  const response = await instance.post<AuthResponse>('/auth/signIn', body);
+  return response.data;
 };
 
 /**
  * 토큰 갱신 (POST /auth/refresh-token)
  */
-export const refreshToken = (body: RefreshTokenRequest) => {
-  return instance.post<RefreshTokenResponse>('/auth/refresh-token', body);
+export const refreshToken = async (body: RefreshTokenRequest): Promise<RefreshTokenResponse> => {
+  const response = await instance.post<RefreshTokenResponse>('/auth/refresh-token', body);
+  return response.data;
 };
