@@ -1,57 +1,43 @@
+import type {
+  AuthResponse,
+  RefreshTokenRequest,
+  RefreshTokenResponse,
+  SignInRequest,
+  SignUpRequest,
+} from '@/types/auth.types';
+
 import instance from './axios';
 
-// Request Types
-interface SignUpRequest {
-  email: string;
-  name: string;
-  password: string;
-  passwordConfirmation: string;
-}
+export type {
+  AuthProfile,
+  AuthResponse,
+  RefreshTokenRequest,
+  RefreshTokenResponse,
+  SignInRequest,
+  SignUpRequest,
+  User,
+} from '@/types/auth.types';
 
-interface SignInRequest {
-  email: string;
-  password: string;
-}
-
-// Response Types
-interface Profile {
-    id: number;
-    code: string;
-  }
-
-interface User {
-  id: number;
-  email: string;
-  name: string;
-  teamId: string;
-  createdAt: string;
-  updatedAt: string;
-  profile: Profile;
-}
-
-interface AuthResponse {
-  user: User;
-  accessToken: string;
-  refreshToken: string;
-}
-
-interface RefreshTokenResponse {
-  accessToken: string;
-}
-
-// API 함수
-export const authApi = {
-  signUp: (body: SignUpRequest) => {
-    return instance.post<AuthResponse>('/auth/signUp', body);
-  },
-
-  signIn: (body: SignInRequest) => {
-    return instance.post<AuthResponse>('/auth/signIn', body);
-  },
-
-  refreshToken: (refreshToken: string) => {
-    return instance.post<RefreshTokenResponse>('/auth/refresh-token', { refreshToken });
-  },
+/**
+ * 회원가입 (POST /auth/signUp)
+ */
+export const signUp = async (body: SignUpRequest): Promise<AuthResponse> => {
+  const response = await instance.post<AuthResponse>('/auth/signUp', body);
+  return response.data;
 };
 
-export type { SignUpRequest, SignInRequest, User, AuthResponse, RefreshTokenResponse };
+/**
+ * 로그인 (POST /auth/signIn)
+ */
+export const signIn = async (body: SignInRequest): Promise<AuthResponse> => {
+  const response = await instance.post<AuthResponse>('/auth/signIn', body);
+  return response.data;
+};
+
+/**
+ * 토큰 갱신 (POST /auth/refresh-token)
+ */
+export const refreshToken = async (body: RefreshTokenRequest): Promise<RefreshTokenResponse> => {
+  const response = await instance.post<RefreshTokenResponse>('/auth/refresh-token', body);
+  return response.data;
+};
