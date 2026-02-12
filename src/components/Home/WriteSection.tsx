@@ -32,7 +32,7 @@ export default function WriteSection() {
           <h2 className='text-[16px] mb-[30px]
           md:text-[32px] md:mb-[40px]
           lg:text-[50px] md:mb-[60px]
-          text-white
+          text-white break-keep
           '>친구의 위키, <br />
           직접 작성해 봐요
           </h2>
