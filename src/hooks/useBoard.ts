@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { AxiosError } from 'axios';
 
-import boardApi from '@/api/board.api';
+import { getArticles } from '@/api/board.api';
 import { useArticlesStore } from '@/stores/boards.store';
 
 export default function useArticles() {
@@ -12,7 +12,12 @@ export default function useArticles() {
       setLoading(true);
       setError(null);
 
-      const data = await boardApi.getArticles({ pageSize: 1000 });
+      const data = await getArticles({
+        page: 1,
+        pageSize: 10,
+        orderBy: 'recent',
+        keyword: '',
+      });
       setArticles(data);
     } catch (error) {
       const e = error as AxiosError<{ message: string }>;

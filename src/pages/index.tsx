@@ -1,4 +1,3 @@
-
 import HeroSection from "@/components/Home/HeroSection";
 import WriteSection from "@/components/Home/WriteSection";
 // import ShareSection from "@/components/Home/ShareSection";
