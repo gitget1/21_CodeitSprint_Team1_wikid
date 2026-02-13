@@ -77,18 +77,3 @@ export const unlikeArticle = async (articleId: number): Promise<ArticleDetail> =
   const response = await instance.delete(`/articles/${articleId}/like`);
   return response.data;
 };
-
-/**
- * 게시판 API 객체
- */
-export const boardApi = {
-  getArticles,
-  getArticle,
-  createArticle,
-  updateArticle,
-  deleteArticle,
-  likeArticle,
-  unlikeArticle,
-};
-
-export default boardApi;
