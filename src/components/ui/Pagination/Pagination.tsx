@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 
 import ChevronLeft from '@/assets/icons/ChevronLeft.svg';
 import ChevronRight from '@/assets/icons/ChevronRight.svg';
-
-const Pagination = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+type Props = {
+  currentPage: number;
+  onPageChange: (page: number) => void;
+};
+const Pagination = ({ currentPage, onPageChange }: Props) => {
+  const totalPages = 5;
   const pages = [1, 2, 3, 4, 5];
-
   return (
     <div className="flex items-center justify-center gap-1 md:gap-2.5">
       <button
-        onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
+        onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         className={`flex items-center justify-center rounded-[10px] bg-white border border-[#DDDDE3] 
                    w-10 h-10 md:w-[45px] md:h-[45px] transition-all 
@@ -23,7 +25,7 @@ const Pagination = () => {
       {pages.map((page) => (
         <button
           key={page}
-          onClick={() => setCurrentPage(page)}
+          onClick={() => onPageChange(page)}
           className={`flex items-center justify-center rounded-[10px] font-semibold transition-all
                      w-10 h-10 md:w-[45px] md:h-[45px] text-sm md:text-xl
                      shadow-[0_4px_20px_rgba(0,0,0,0.08)] 
@@ -38,7 +40,7 @@ const Pagination = () => {
       ))}
 
       <button
-        onClick={() => currentPage < pages.length && setCurrentPage(currentPage + 1)}
+        onClick={() => currentPage < pages.length && onPageChange(currentPage + 1)}
         disabled={currentPage === pages.length}
         className={`flex items-center justify-center rounded-[10px] bg-white border border-[#DDDDE3] 
                    w-10 h-10 md:w-[45px] md:h-[45px] transition-all

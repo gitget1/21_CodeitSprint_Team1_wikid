@@ -11,35 +11,36 @@ interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   isSubmitted?: boolean;
 }
 
-const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
-  function FormInput({ label, type = 'text', placeholder, error, isSubmitted, className, name, ...props }, ref) {
-    return (
-      <div>
-        <span className="text-md-regular text-gray-500">{label}</span>
-        <label
-          htmlFor={name}
-          className={`${labelStyle} ${error ? 'bg-secondary-red-100' : 'bg-gray-100'}`}
-        >
-          <Input
-            ref={ref}
-            type={type}
-            id={name}
-            placeholder={placeholder}
-            className={`w-full ${className || ''}`}
-            aria-invalid={isSubmitted ? (error ? 'true' : 'false') : undefined}
-            name={name}
-            error={false}
-            {...props}
-          />
-        </label>
-        {error && (
-          <span role="alert" className="mt-2.5 text-xs-regular text-secondary-red-200">
-            {error.message}
-          </span>
-        )}
-      </div>
-    );
-  }
-);
+const FormInput = forwardRef<HTMLInputElement, FormInputProps>(function FormInput(
+  { label, type = 'text', placeholder, error, isSubmitted, className, name, ...props },
+  ref
+) {
+  return (
+    <div>
+      <span className="text-md-regular text-gray-500">{label}</span>
+      <label
+        htmlFor={name}
+        className={`${labelStyle} ${error ? 'bg-secondary-red-100' : 'bg-gray-100'}`}
+      >
+        <Input
+          ref={ref}
+          type={type}
+          id={name}
+          placeholder={placeholder}
+          className={`w-full ${className || ''}`}
+          aria-invalid={isSubmitted ? (error ? 'true' : 'false') : undefined}
+          name={name}
+          error={false}
+          {...props}
+        />
+      </label>
+      {error && (
+        <span role="alert" className="mt-2.5 text-xs-regular text-secondary-red-200">
+          {error.message}
+        </span>
+      )}
+    </div>
+  );
+});
 
 export default FormInput;

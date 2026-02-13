@@ -14,7 +14,7 @@ function Searchbar({ value, placeholder, id, ...props }: SearchBarProps) {
   return (
     <label
       htmlFor={id}
-      className={`
+      className={`  
         py-2.25 px-3.75
         flex gap-4
         items-center

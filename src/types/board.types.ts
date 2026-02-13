@@ -16,10 +16,10 @@ export interface Article {
 }
 /** 게시글 목록 조회 쿼리 파라미터 */
 export interface ArticleListParams {
-  page: number;
-  pageSize: number;
-  orderBy: 'recent' | 'like';
-  keyword: string;
+  page?: number;
+  pageSize?: number;
+  orderBy?: 'recent' | 'like';
+  keyword?: string;
 }
 /** 게시글 상세 조회(content·isLiked 포함) */
 export interface ArticleDetail extends Article {

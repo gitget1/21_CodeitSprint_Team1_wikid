@@ -8,7 +8,10 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ type = 'text', error = false, errorMessage, disabled = false, success = false, ...props }, ref) => {
+  (
+    { type = 'text', error = false, errorMessage, disabled = false, success = false, ...props },
+    ref
+  ) => {
     return (
       <div className="flex flex-col gap-[10px] w-[400px]">
         <input

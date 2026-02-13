@@ -1,57 +1,56 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
 import Searchbar from '@/components/ui/SearchBar';
 import Dropdown from '@/components/ui/Dropdown/Dropdown';
 import Button from '@/components/ui/Button/Button';
 import Pagination from '@/components/ui/Pagination/Pagination';
-import { LikesIcon } from '@/assets/icons/likesIcon';
+import LikesIcon from '@/assets/icons/ic_heart.svg';
+import useArticles from '@/hooks/useBoard';
+import { useArticlesStore } from '@/stores/boards.store';
+import ArticleBestCard from '@/components/ui/Board/ArticleBestCard';
+import ArticleMobileItem from '@/components/ui/Board/ArticleMobileItem';
+import ArticleTableRow from '@/components/ui/Board/ArticleTableRow';
+
 export default function BoardsPage() {
-  const [articles, setArticles] = useState([
-    {
-      updatedAt: '2026-02-05',
-      createdAt: '2026-02-05',
-      likeCount: 12,
-      writer: { name: '김코딩', id: 1 },
-      image: 'https://picsum.photos/id/1015/600/400',
-      title: 'React 상태 관리 정리',
-      id: 1,
-    },
-    {
-      updatedAt: '2026-02-04',
-      createdAt: '2026-02-04',
-      likeCount: 5,
-      writer: { name: '박프론트', id: 2 },
-      image: 'https://picsum.photos/id/1025/600/400',
-      title: 'Next.js App Router 사용법',
-      id: 2,
-    },
-    {
-      updatedAt: '2026-02-03',
-      createdAt: '2026-02-03',
-      likeCount: 27,
-      writer: { name: '이디자인', id: 3 },
-      image: 'https://picsum.photos/id/1035/600/400',
-      title: 'Tailwind로 카드 UI 만들기',
-      id: 3,
-    },
-    {
-      updatedAt: '2026-02-04',
-      createdAt: '2026-02-04',
-      likeCount: 8,
-      writer: {
-        name: '홍길동',
-        id: 4,
-      },
-      image: 'https://picsum.photos/id/1025/600/400',
-      title: '네 번째 게시글입니다.',
-      id: 4,
-    },
-  ]);
+  const { fetchArticles } = useArticles();
+  const { articles, isLoading, error } = useArticlesStore();
   const [search, setSearch] = useState<string>('');
+  const [q, setQ] = useState<string>('');
   const sortOptions = [
     { label: '최신순', value: 'recent' },
     { label: '좋아요순', value: 'likes' },
   ];
   const [option, setOption] = useState<string>('recent');
+  const [page, setPage] = useState<number>(1);
+  const PAGE_SIZE = 10;
+  useEffect(() => {
+    fetchArticles();
+  }, [fetchArticles]);
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setQ(search);
+      setPage(1);
+    }, 500);
+
+    return () => clearTimeout(t);
+  }, [search]);
+  if (isLoading) return <div>로딩...</div>;
+  if (error) return <div>{error}</div>;
+
+  const list = (articles?.list ?? [])
+    .filter(
+      (a) =>
+        a.title.toLowerCase().includes(q.toLowerCase()) ||
+        a.writer.name.toLowerCase().includes(q.toLowerCase())
+    )
+    .sort((a, b) =>
+      option === 'likes'
+        ? b.likeCount - a.likeCount
+        : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  const pagedList = list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   return (
     <div className="mt-[60px] w-full px-3 md:max-w-[1200px] md:mx-auto md:px-8">
       <div className=" flex  justify-between">
@@ -64,32 +63,11 @@ export default function BoardsPage() {
         <div className="overflow-hidden md:overflow-visible w-full">
           <div className="gap-4 mt-[60px] w-full flex md:grid md:grid-cols-2 md:overflow-visible lg:grid-cols-4">
             {articles &&
-              articles.map((article) => (
-                <div
-                  key={article.id}
-                  className=" min-w-[250px]  border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.08)] rounded-[10px] h-[220px] flex flex-col
-               "
-                >
-                  <img src={article.image} className="w-full h-32 rounded-[10px] " />
-                  <div className="flex flex-col  justify-center h-full w-full text-left px-4">
-                    <div className="text-[rgb(71_77_102)] font-semibold text-[18px] leading-[26px]">
-                      {article.title}
-                    </div>
-
-                    <div className="flex items-center justify-between text-[rgb(143_149_178)] text-[14px] font-normal leading-[24px] pt-[6px] gap-2">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <div className="shrink-0">{article.writer.name}</div>
-                        <div className="shrink-0">{article.createdAt}</div>
-                      </div>
-
-                      <div className="flex items-center gap-1 shrink-0">
-                        <LikesIcon />
-                        <div>{article.likeCount}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+              articles?.list
+                ?.slice()
+                .sort((a, b) => b.likeCount - a.likeCount)
+                .slice(0, 4)
+                .map((article) => <ArticleBestCard key={article.id} article={article} />)}
           </div>
         </div>
       </div>
@@ -100,7 +78,9 @@ export default function BoardsPage() {
               placeholder="검색"
               id="board"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
             />
           </div>
           <button
@@ -120,25 +100,8 @@ export default function BoardsPage() {
       </div>
 
       <div className="mt-[20px] md:hidden">
-        {articles.map((article) => (
-          <div
-            key={article.id}
-            className="rounded-[10px]  border-b border-[rgb(228_229_240)] bg-white px-4 py-3"
-          >
-            <div className="text-[16px] font-semibold text-[rgb(71_77_102)]">{article.title}</div>
-
-            <div className="mt-2 flex items-center justify-between text-[14px] text-[rgb(143_149_178)]">
-              <div className="flex items-center gap-4">
-                <span>{article.writer.name}</span>
-                <span>{article.createdAt}</span>
-              </div>
-
-              <div className="flex items-center gap-1">
-                <LikesIcon />
-                <span>{article.likeCount}</span>
-              </div>
-            </div>
-          </div>
+        {pagedList.map((article) => (
+          <ArticleMobileItem key={article.id} article={article} />
         ))}
       </div>
 
@@ -153,20 +116,13 @@ export default function BoardsPage() {
           </tr>
         </thead>
         <tbody>
-          {articles &&
-            articles.map((article) => (
-              <tr className=" h-[49px] text-[16px] font-normal text-[rgb(71_77_102)] border-b border-[rgb(228_229_240)]">
-                <td className="text-center">{article.id}</td>
-                <td className="text-center">{article.title}</td>
-                <td className="text-center">{article.writer.name}</td>
-                <td className="text-center">{article.likeCount}</td>
-                <td className="text-center">{article.createdAt}</td>
-              </tr>
-            ))}
+          {pagedList.map((article) => (
+            <ArticleTableRow key={article.id} article={article} />
+          ))}
         </tbody>
       </table>
       <div className="mt-[60px] mb-[100px]">
-        <Pagination />
+        <Pagination currentPage={page} onPageChange={setPage} />
       </div>
     </div>
   );

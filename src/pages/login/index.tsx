@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 
 import { useAuthStore } from '@/stores/auth.store';
 import useSignIn from '@/hooks/useSignIn';
-import Button from "@/components/ui/Button/Button";
+import Button from '@/components/ui/Button/Button';
 import FormInput from '@/components/common/FormInput';
 import { loginSchema, type LoginForm } from '@/utils/validators';
 
@@ -26,16 +26,17 @@ export default function LoginPage() {
     if (isLoggedIn) {
       router.replace('/');
     } else {
-      setIsLoaded(true);
+      queueMicrotask(() => setIsLoaded(true));
     }
-  },[isLoggedIn, router]);
+  }, [isLoggedIn, router]);
 
   if (!isLoaded || isLoggedIn) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div>Loading...</div>
-      </div> 
-  )};
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center m-auto my-15">
