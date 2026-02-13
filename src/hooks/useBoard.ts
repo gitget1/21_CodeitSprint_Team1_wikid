@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { AxiosError } from 'axios';
 
-import boardApi from '@/api/board.api';
+import { getArticles } from '@/api/board.api';
 import { useArticlesStore } from '@/stores/boards.store';
 
 export default function useArticles() {
