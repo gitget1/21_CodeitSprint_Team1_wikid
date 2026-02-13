@@ -99,21 +99,43 @@ function Navbar() {
                 className={` text-gray-400 cursor-pointer text-md-regular ${HOVER_GREEN}`}
               />
               <div className="relative" ref={profileRef}>
-                <ProfileIcon
-                  onClick={() => setOpenProfileMenu(!openProfileMenu)}
-                  className={`text-gray-400 cursor-pointer text-md-regular ${HOVER_GREEN}`}
-                />
-                {openProfileMenu && <Menu items={profileMenu} />}
+                <button
+                  type="button"
+                  onMouseDown={(e) => {
+                    e.stopPropagation();
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenProfileMenu(!openProfileMenu);
+                  }}
+                  className="flex items-center justify-center"
+                >
+                  <ProfileIcon
+                    className={`text-gray-400 text-md-regular ${HOVER_GREEN}`}
+                  />
+                </button>
+                {openProfileMenu && <Menu items={profileMenu} onClose={() => setOpenProfileMenu(false)} />}
               </div>
             </div>
           )}
         </div>
         <div className="relative md:hidden" ref={menuRef}>
-          <MenuIcon
-            onClick={() => setOpenMenu(!openMenu)}
-            className={`block text-gray-400 cursor-pointer text-md-regular ${HOVER_GREEN}`}
-          />
-          {openMenu && isLoaded && <Menu items={isLoggedIn ? userMenu : guestMenu} />}
+          <button
+            type="button"
+            onMouseDown={(e) => {
+              e.stopPropagation();
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpenMenu(!openMenu);
+            }}
+            className="flex items-center justify-center"
+          >
+            <MenuIcon
+              className={`block text-gray-400 text-md-regular ${HOVER_GREEN}`}
+            />
+          </button>
+          {openMenu && isLoaded && <Menu items={isLoggedIn ? userMenu : guestMenu} onClose={() => setOpenMenu(false)} />}
         </div>
       </div>
     </div>
