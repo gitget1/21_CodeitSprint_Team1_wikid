@@ -12,7 +12,7 @@ export default function useArticles() {
       setLoading(true);
       setError(null);
 
-      const data = await boardApi.getArticles({ pageSize: 1000 });
+      const data = await getArticles({ pageSize: 1000 });
       setArticles(data);
     } catch (error) {
       const e = error as AxiosError<{ message: string }>;

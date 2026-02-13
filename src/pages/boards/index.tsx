@@ -21,7 +21,7 @@ export default function BoardsPage() {
   const PAGE_SIZE = 10;
   useEffect(() => {
     fetchArticles();
-  }, []);
+  }, [fetchArticles]);
 
   if (isLoading) return <div>로딩...</div>;
   if (error) return <div>{error}</div>;
