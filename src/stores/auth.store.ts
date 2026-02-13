@@ -8,6 +8,7 @@ interface AuthState {
     accessToken: string | null;
     refreshToken: string | null;
     setLogin: (data: AuthResponse) => void;
+    updateToken: (accessToken: string) => void;
     clearLogin: () => void;
 }
 

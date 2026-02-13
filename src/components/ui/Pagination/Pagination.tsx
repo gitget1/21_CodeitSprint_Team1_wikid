@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import ChevronLeft from '@/assets/icons/ChevronLeft';
-import ChevronRight from '@/assets/icons/ChevronRight';
+import ChevronLeft from '@/assets/icons/ChevronLeft.svg';
+import ChevronRight from '@/assets/icons/ChevronRight.svg';
 type Props = {
   currentPage: number;
   onPageChange: (page: number) => void;
