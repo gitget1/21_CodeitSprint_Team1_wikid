@@ -10,14 +10,14 @@ import type {
   SnackbarType,
 } from '@/stores/snackbar.store';
 import { useSnackbarStore } from '@/stores/snackbar.store';
-import { InfoIcon } from '@/assets/icons/InfoIcon';
-import { SuccessIcon } from '@/assets/icons/SuccessIcon';
-import { ErrorIcon } from '@/assets/icons/ErrorIcon';
+import InfoIcon from '@/assets/icons/ic_info.svg';
+import SuccessIcon from '@/assets/icons/ic_success.svg';
+import ErrorIcon from '@/assets/icons/ic_error.svg';
 
 const typeConfig: Record<
   SnackbarType,
   {
-    Icon: typeof InfoIcon;
+    Icon: React.FC<React.SVGProps<SVGSVGElement>>;
     bg: string;
     border: string;
     text: string;
