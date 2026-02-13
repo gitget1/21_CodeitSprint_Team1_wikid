@@ -29,7 +29,7 @@ export default function WriteSection() {
           text-primary-green-200 font-bold uppercase
           '>Write</span>
 
-          <h2 className='text-[16px] mb-[30px]
+          <h2 className='text-[16px] mb-[30px] 
           md:text-[32px] md:mb-[40px]
           lg:text-[50px] md:mb-[60px]
           text-white break-keep
