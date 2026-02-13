@@ -1,30 +1,20 @@
-import { FieldError, FieldValues, Path, RegisterOptions, UseFormRegister } from 'react-hook-form';
+import { forwardRef } from 'react';
+import { FieldError } from 'react-hook-form';
 
 import Input from '@/components/ui/Input/Input';
 
 const labelStyle = `h-[45px] text-gray-500 py-2.25 px-3.75 flex gap-4 items-center justify-start rounded-[10px] mt-2.5`;
 
-interface FormInputProps<T extends FieldValues> {
+interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  name: Path<T>;
-  type?: string;
-  placeholder?: string;
-  register: UseFormRegister<T>;
-  rules?: RegisterOptions<T, Path<T>>;
   error?: FieldError;
   isSubmitted?: boolean;
 }
 
-export default function FormInput<T extends FieldValues>({
-  label,
-  name,
-  type = 'text',
-  placeholder,
-  register,
-  rules,
-  error,
-  isSubmitted,
-}: FormInputProps<T>) {
+const FormInput = forwardRef<HTMLInputElement, FormInputProps>(function FormInput(
+  { label, type = 'text', placeholder, error, isSubmitted, className, name, ...props },
+  ref
+) {
   return (
     <div>
       <span className="text-md-regular text-gray-500">{label}</span>
@@ -33,12 +23,15 @@ export default function FormInput<T extends FieldValues>({
         className={`${labelStyle} ${error ? 'bg-secondary-red-100' : 'bg-gray-100'}`}
       >
         <Input
+          ref={ref}
           type={type}
           id={name}
           placeholder={placeholder}
-          className="w-full"
-          {...register(name, rules)}
+          className={`w-full ${className || ''}`}
           aria-invalid={isSubmitted ? (error ? 'true' : 'false') : undefined}
+          name={name}
+          error={false}
+          {...props}
         />
       </label>
       {error && (
@@ -48,4 +41,6 @@ export default function FormInput<T extends FieldValues>({
       )}
     </div>
   );
-}
+});
+
+export default FormInput;
