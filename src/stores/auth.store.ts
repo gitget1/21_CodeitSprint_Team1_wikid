@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AuthResponse, User } from '@/api/auth.api';
+import { AuthResponse, User, AuthProfile } from '@/api/auth.api';
 
 interface AuthState {
     isLoggedIn: boolean;
@@ -9,6 +9,7 @@ interface AuthState {
     refreshToken: string | null;
     setLogin: (data: AuthResponse) => void;
     updateToken: (accessToken: string) => void;
+    updateProfile: (profile: AuthProfile) => void;
     clearLogin: () => void;
 }
 
@@ -30,6 +31,11 @@ export const useAuthStore = create<AuthState>()(
 
         updateToken: (accessToken: string) =>
             set({accessToken: accessToken,}),
+
+        updateProfile: (profile: AuthProfile) =>
+            set((state) => ({
+                user: state.user ? { ...state.user, profile } : null,
+            })),
   
         clearLogin: () =>
           set({

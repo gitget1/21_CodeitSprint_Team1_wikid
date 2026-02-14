@@ -1,7 +1,10 @@
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import useChangePassword from '@/hooks/useChangePassword';
+import useCreateProfile from '@/hooks/useCreateProfile';
+import { useAuthStore } from '@/stores/auth.store';
 import FormInput from '@/components/common/FormInput';
 import Button from '@/components/ui/Button/Button';
 import { changePasswordSchema, createWikiSchema, type ChangePasswordForm, type CreateWikiForm } from '@/utils/validators';
@@ -9,6 +12,10 @@ import { changePasswordSchema, createWikiSchema, type ChangePasswordForm, type C
 export default function MyPage() {
   const { isLoading } = useRequireAuth();
   const changePasswordMutation = useChangePassword();
+  const createProfileMutation = useCreateProfile();
+  const user = useAuthStore((state) => state.user);
+  const hasProfile = !!user?.profile?.code;
+  const router = useRouter();
 
   const {
     register: registerPassword,
@@ -36,7 +43,11 @@ export default function MyPage() {
   };
 
   const handleCreateWiki = (data: CreateWikiForm) => {
-    console.log('위키 생성 데이터:', data);
+    if (hasProfile) {
+      alert('이미 위키가 생성되었습니다.');
+      return;
+    }
+    createProfileMutation.mutate(data);
   };
 
   if (isLoading) {
@@ -63,6 +74,7 @@ export default function MyPage() {
             error={errorsPassword.currentPassword}
             isSubmitted={isSubmittedPassword}
             showLabel={false}
+            autoComplete="current-password"
             {...registerPassword('currentPassword')}
           />
           <FormInput
@@ -72,6 +84,7 @@ export default function MyPage() {
             error={errorsPassword.password}
             isSubmitted={isSubmittedPassword}
             showLabel={false}
+            autoComplete="new-password"
             {...registerPassword('password')}
           />
           <FormInput
@@ -81,6 +94,7 @@ export default function MyPage() {
             error={errorsPassword.passwordConfirmation}
             isSubmitted={isSubmittedPassword}
             showLabel={false}
+            autoComplete="new-password"
             {...registerPassword('passwordConfirmation')}
           />
         </div>
@@ -119,7 +133,11 @@ export default function MyPage() {
           />
         </div>
         <div className="flex justify-end">
-          <Button type="submit" disabled={isSubmittingWiki} className="w-[89px] !min-w-0 px-5 h-[40px]">
+          <Button 
+            type="submit" 
+            disabled={isSubmittingWiki || createProfileMutation.isPending} 
+            className="w-[89px] !min-w-0 px-5 h-[40px]"
+          >
             생성하기
           </Button>
         </div>

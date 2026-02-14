@@ -31,6 +31,7 @@ export default function SignupPage() {
           placeholder="이름을 입력해주세요"
           error={errors.name}
           isSubmitted={isSubmitted}
+          autoComplete="name"
           {...register('name')}
         />
         <FormInput
@@ -39,6 +40,7 @@ export default function SignupPage() {
           placeholder="이메일을 입력해주세요"
           error={errors.email}
           isSubmitted={isSubmitted}
+          autoComplete="email"
           {...register('email')}
         />
         <FormInput
@@ -47,6 +49,7 @@ export default function SignupPage() {
           placeholder="비밀번호를 입력해주세요"
           error={errors.password}
           isSubmitted={isSubmitted}
+          autoComplete="new-password"
           {...register('password')}
         />
         <FormInput
@@ -55,6 +58,7 @@ export default function SignupPage() {
           placeholder="비밀번호를 다시 입력해주세요"
           error={errors.passwordConfirmation}
           isSubmitted={isSubmitted}
+          autoComplete="new-password"
           {...register('passwordConfirmation')}
         />
         <Button type="submit" disabled={isSubmitting} fullWidth size="lg" className="mt-2 h-[45px]">
