@@ -19,6 +19,7 @@ export default function useArticles() {
         orderBy: 'recent',
         keyword: '',
       });
+
       setArticles(data);
     } catch (error) {
       const e = error as AxiosError<{ message: string }>;

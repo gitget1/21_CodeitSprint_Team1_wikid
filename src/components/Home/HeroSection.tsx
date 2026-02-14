@@ -1,7 +1,8 @@
-import Image from "next/image";
+import Image from 'next/image';
+import Link from 'next/link';
+
 import heroMainVisual from '@/assets/images/heroMainVisual.png';
-import { nexonGothic } from "@/styles/nexonfont";
-import Link from "next/link";
+import { nexonGothic } from '@/styles/nexonfont';
 
 export default function HeroSection() {
   return (
@@ -23,7 +24,7 @@ export default function HeroSection() {
           rounded-t-[100%]
           bg-[#474D66]
           "
-          />
+      />
 
       {/* Hero 컨텐츠 */}
       <div className="relative z-10 mx-auto max-w-[1200px] px-4 pt-[100px] md:pt-30 lg:pt-30">
@@ -32,7 +33,8 @@ export default function HeroSection() {
           <span className="lg:text-[90px] font-bold md:text-[90px] text-[60px]">나만의 위키</span>
         </h1>
 
-        <Link href="/wiki/{code}"
+        <Link
+          href="/wiki/{code}"
           className="
             font-pretendard
             mx-auto mt-6
@@ -63,4 +65,3 @@ export default function HeroSection() {
     </section>
   );
 }
-
