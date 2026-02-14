@@ -17,8 +17,10 @@ export default function CtaSection() {
     // 하이드레이션 완료 전 클릭 방지
     if (!isLoaded) return;
 
-    // 1. 로그아웃 상태 (user가 없음)
-    if (!user) {
+    const { isLoggedIn } = useAuthStore.getState();
+
+    // 1. 로그아웃 상태
+    if (!isLoggedIn || !user) {
       router.push('/login');
       return;
     }
