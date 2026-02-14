@@ -1,17 +1,20 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import useChangePassword from '@/hooks/useChangePassword';
 import FormInput from '@/components/common/FormInput';
 import Button from '@/components/ui/Button/Button';
 import { changePasswordSchema, createWikiSchema, type ChangePasswordForm, type CreateWikiForm } from '@/utils/validators';
 
 export default function MyPage() {
   const { isLoading } = useRequireAuth();
+  const changePasswordMutation = useChangePassword();
 
   const {
     register: registerPassword,
     handleSubmit: handleSubmitPassword,
     formState: { isSubmitting: isSubmittingPassword, isSubmitted: isSubmittedPassword, errors: errorsPassword },
+    reset: resetPassword,
   } = useForm<ChangePasswordForm>({
     resolver: zodResolver(changePasswordSchema),
   });
@@ -25,7 +28,11 @@ export default function MyPage() {
   });
 
   const handleChangePassword = (data: ChangePasswordForm) => {
-    console.log('비밀번호 변경 데이터:', data);
+    changePasswordMutation.mutate(data, {
+      onSuccess: () => {
+        resetPassword();
+      },
+    });
   };
 
   const handleCreateWiki = (data: CreateWikiForm) => {
@@ -78,7 +85,11 @@ export default function MyPage() {
           />
         </div>
         <div className="flex justify-end">
-          <Button type="submit" disabled={isSubmittingPassword} className="w-[89px] !min-w-0 px-5 h-[40px]">
+          <Button 
+            type="submit" 
+            disabled={isSubmittingPassword || changePasswordMutation.isPending} 
+            className="w-[89px] !min-w-0 px-5 h-[40px]"
+          >
             변경하기
           </Button>
         </div>
