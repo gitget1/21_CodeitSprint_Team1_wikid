@@ -1,13 +1,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
-
-import { useEffect, useRef, useState } from 'react';
+import { useSyncExternalStore, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { useOutsideClick } from '@/hooks/useOutsideClick';
 import { useAuthStore } from '@/stores/auth.store';
-
-
 import BellIcon from '@/assets/icons/Bell.svg';
 import ProfileIcon from '@/assets/icons/Profile.svg';
 import MenuIcon from '@/assets/icons/Menu.svg';
@@ -22,11 +19,11 @@ function Navbar() {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const user = useAuthStore((state) => state.user);
   const clearLogin = useAuthStore((state) => state.clearLogin);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
+  const isLoaded = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   //상태별 메뉴 목록 정의
   const guestMenu = [
@@ -50,7 +47,7 @@ function Navbar() {
       onClick: user?.profile?.code
         ? undefined
         : () => {
-            alert('위키를 생성해주세요')
+            alert('위키를 생성해주세요');
           },
     },
     {
@@ -93,16 +90,12 @@ function Navbar() {
       <div>
         <div className="hidden md:flex items-center">
           {isLoaded && !isLoggedIn && (
-            <Link
-              href="/login"
-              className={`text-gray-400 text-md-regular ${HOVER_GREEN}`}
-            >
+            <Link href="/login" className={`text-gray-400 text-md-regular ${HOVER_GREEN}`}>
               로그인
             </Link>
           )}
 
           {isLoaded && isLoggedIn && (
-
             <div className=" flex justify-center items-center gap-6 ">
               <BellIcon
                 className={` text-gray-400 cursor-pointer text-md-regular ${HOVER_GREEN}`}
@@ -119,11 +112,11 @@ function Navbar() {
                   }}
                   className="flex items-center justify-center"
                 >
-                  <ProfileIcon
-                    className={`text-gray-400 text-md-regular ${HOVER_GREEN}`}
-                  />
+                  <ProfileIcon className={`text-gray-400 text-md-regular ${HOVER_GREEN}`} />
                 </button>
-                {openProfileMenu && <Menu items={profileMenu} onClose={() => setOpenProfileMenu(false)} />}
+                {openProfileMenu && (
+                  <Menu items={profileMenu} onClose={() => setOpenProfileMenu(false)} />
+                )}
               </div>
             </div>
           )}
@@ -140,11 +133,11 @@ function Navbar() {
             }}
             className="flex items-center justify-center"
           >
-            <MenuIcon
-              className={`block text-gray-400 text-md-regular ${HOVER_GREEN}`}
-            />
+            <MenuIcon className={`block text-gray-400 text-md-regular ${HOVER_GREEN}`} />
           </button>
-          {openMenu && isLoaded && <Menu items={isLoggedIn ? userMenu : guestMenu} onClose={() => setOpenMenu(false)} />}
+          {openMenu && isLoaded && (
+            <Menu items={isLoggedIn ? userMenu : guestMenu} onClose={() => setOpenMenu(false)} />
+          )}
         </div>
       </div>
     </div>
