@@ -26,8 +26,10 @@ export default function AlertDialogContainer() {
           <AlertDialogTitle>알림</AlertDialogTitle>
           <AlertDialogDescription>{message}</AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="sm:justify-center">
-          <AlertDialogAction onClick={handleConfirm}>확인</AlertDialogAction>
+        <AlertDialogFooter className="w-full mt-3">
+          <AlertDialogAction onClick={handleConfirm} className="w-full h-[40px]">
+            확인
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
