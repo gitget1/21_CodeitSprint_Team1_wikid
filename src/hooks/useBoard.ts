@@ -12,7 +12,14 @@ export default function useArticles() {
       setLoading(true);
       setError(null);
 
-      const data = await getArticles({ pageSize: 1000 });
+      const data = await getArticles({
+        page: 1,
+        pageSize: 10,
+
+        orderBy: 'recent',
+        keyword: '',
+      });
+
       setArticles(data);
     } catch (error) {
       const e = error as AxiosError<{ message: string }>;

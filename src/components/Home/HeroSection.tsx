@@ -1,10 +1,35 @@
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import Image from 'next/image';
-import Link from 'next/link';
 
 import heroMainVisual from '@/assets/images/heroMainVisual.png';
 import { nexonGothic } from '@/styles/nexonfont';
+import { useAuthStore } from '@/stores/auth.store';
 
 export default function HeroSection() {
+  const router = useRouter();
+  const [isLoaded, setIsLoaded] = useState(false);
+  const user = useAuthStore((state) => state.user);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
+  const handleClick = () => {
+    if (!isLoaded) return;
+
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+
+    if (user.profile?.code) {
+      router.push(`/wiki/${user.profile.code}`);
+    } else {
+      router.push('/mypage');
+    }
+  };
+
   return (
     <section
       className={`
@@ -33,8 +58,8 @@ export default function HeroSection() {
           <span className="lg:text-[90px] font-bold md:text-[90px] text-[60px]">나만의 위키</span>
         </h1>
 
-        <Link
-          href="/wiki/{code}"
+        <button
+          onClick={handleClick}
           className="
             font-pretendard
             mx-auto mt-6
@@ -48,7 +73,7 @@ export default function HeroSection() {
           "
         >
           위키 만들기
-        </Link>
+        </button>
 
         <div className="relative mx-auto mt-12 w-[240px] md:w-[300px] lg:w-[360px] aspect-[360/420]">
           <Image

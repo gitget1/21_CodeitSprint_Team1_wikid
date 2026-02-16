@@ -25,6 +25,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (isLoggedIn) {
       router.replace('/');
+      console.log('isLoggedIn', isLoggedIn);
     } else {
       queueMicrotask(() => setIsLoaded(true));
     }
@@ -51,6 +52,7 @@ export default function LoginPage() {
           placeholder="이메일을 입력해주세요"
           error={errors.email}
           isSubmitted={isSubmitted}
+          autoComplete="email"
           {...register('email')}
         />
         <FormInput
@@ -59,6 +61,7 @@ export default function LoginPage() {
           placeholder="비밀번호를 입력해주세요"
           error={errors.password}
           isSubmitted={isSubmitted}
+          autoComplete="current-password"
           {...register('password')}
         />
         <Button type="submit" disabled={isSubmitting} fullWidth size="lg" className="mt-2 h-[45px]">

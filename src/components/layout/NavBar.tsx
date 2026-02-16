@@ -20,6 +20,7 @@ const HOVER_GREEN = 'hover:text-primary-green-300';
 function Navbar() {
   const router = useRouter();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const user = useAuthStore((state) => state.user);
   const clearLogin = useAuthStore((state) => state.clearLogin);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -43,7 +44,15 @@ function Navbar() {
 
   const profileMenu = [
     { label: '계정설정', href: '/mypage' },
-    { label: '내위키', href: '/mypage' }, //임시링크임 나중에 본인 위키 해당하는 id 부여해서 다시 링크 설정
+    {
+      label: '내위키',
+      href: user?.profile?.code ? `/wiki/${user.profile.code}` : '/mypage',
+      onClick: user?.profile?.code
+        ? undefined
+        : () => {
+            alert('위키를 생성해주세요')
+          },
+    },
     {
       label: '로그아웃',
       onClick: () => {
