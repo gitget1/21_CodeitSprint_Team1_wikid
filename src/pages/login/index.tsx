@@ -8,6 +8,7 @@ import { useAuthStore } from '@/stores/auth.store';
 import useSignIn from '@/hooks/useSignIn';
 import Button from '@/components/ui/Button/Button';
 import FormInput from '@/components/common/FormInput';
+import LoginPageSkeleton from './LoginPageSkeleton';
 import { loginSchema, type LoginForm } from '@/utils/validators';
 
 export default function LoginPage() {
@@ -25,17 +26,14 @@ export default function LoginPage() {
   useEffect(() => {
     if (isLoggedIn) {
       router.replace('/');
-      console.log('isLoggedIn', isLoggedIn);
     } else {
-      queueMicrotask(() => setIsLoaded(true));
+      setIsLoaded(true);
     }
   }, [isLoggedIn, router]);
 
   if (!isLoaded || isLoggedIn) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div>Loading...</div>
-      </div>
+      <LoginPageSkeleton />
     );
   }
 

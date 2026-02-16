@@ -1,12 +1,14 @@
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useState } from 'react';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import useChangePassword from '@/hooks/useChangePassword';
 import useCreateProfile from '@/hooks/useCreateProfile';
 import { useAuthStore } from '@/stores/auth.store';
 import FormInput from '@/components/common/FormInput';
 import Button from '@/components/ui/Button/Button';
+import MyPageSkeleton from './MyPageSkeleton';
 import { changePasswordSchema, createWikiSchema, type ChangePasswordForm, type CreateWikiForm } from '@/utils/validators';
 
 export default function MyPage() {
@@ -16,6 +18,13 @@ export default function MyPage() {
   const user = useAuthStore((state) => state.user);
   const hasProfile = !!user?.profile?.code;
   const router = useRouter();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setIsLoaded(true);
+    }
+  }, [isLoading]);
 
   const {
     register: registerPassword,
@@ -50,12 +59,8 @@ export default function MyPage() {
     createProfileMutation.mutate(data);
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div>Loading...</div>
-      </div>
-    );
+  if (isLoading || !isLoaded) {
+    return <MyPageSkeleton />;
   }
 
   return (
