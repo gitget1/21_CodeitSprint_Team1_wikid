@@ -8,9 +8,11 @@ export interface AuthState {
   user: User | null;
   accessToken: string | null;
   refreshToken: string | null;
+  profileImageUrl: string | null;
   setLogin: (data: AuthResponse) => void;
   updateToken: (accessToken: string) => void;
   updateProfile: (profile: AuthProfile) => void;
+  setProfileImageUrl: (url: string | null) => void;
   clearLogin: () => void;
 }
 
@@ -21,6 +23,7 @@ const authStoreImpl = (
   user: null,
   accessToken: null,
   refreshToken: null,
+  profileImageUrl: null,
 
   setLogin: (data) =>
     set({
@@ -37,12 +40,15 @@ const authStoreImpl = (
       user: state.user ? { ...state.user, profile } : null,
     })),
 
+  setProfileImageUrl: (url) => set({ profileImageUrl: url }),
+
   clearLogin: () =>
     set({
       isLoggedIn: false,
       user: null,
       accessToken: null,
       refreshToken: null,
+      profileImageUrl: null,
     }),
 });
 

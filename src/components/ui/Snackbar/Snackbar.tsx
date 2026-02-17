@@ -21,6 +21,7 @@ const typeConfig: Record<
     bg: string;
     border: string;
     text: string;
+    iconColor: string;
     width: string;
     smallWidth: string;
   }
@@ -30,34 +31,39 @@ const typeConfig: Record<
     bg: 'bg-gray-100',
     border: 'border-gray-200',
     text: 'text-gray-500',
+    iconColor: '#8F95B2',
     width: 'w-[860px] max-w-[calc(100vw-32px)]',
     smallWidth: 'w-max min-w-[230px] max-w-[335px]',
   },
   success: {
     Icon: SuccessIcon,
-    bg: 'bg-primary-green-100',
-    border: 'border-primary-green-200',
-    text: 'text-primary-green-200',
+    bg: 'bg-[#E0F2EF]',
+    border: 'border-[#4CBFA4]',
+    text: 'text-[#4CBFA4]',
+    iconColor: '#4CBFA4',
     width: 'w-[247px]',
     smallWidth: 'w-max min-w-[230px]',
   },
   error: {
     Icon: ErrorIcon,
-    bg: 'bg-secondary-red-100',
-    border: 'border-secondary-red-200',
-    text: 'text-secondary-red-200',
-    width: 'w-[384px] ',
+    bg: 'bg-[#FBEDED]',
+    border: 'border-[#D14343]',
+    text: 'text-[#D14343]',
+    iconColor: '#D14343',
+    width: 'w-[384px]',
     smallWidth: 'w-max',
   },
 };
 
-const sizeConfig: Record<SnackbarSize, { item: string; iconClass: string }> = {
+const sizeConfig: Record<SnackbarSize, { item: string; iconBox: string; iconClass: string }> = {
   default: {
-    item: 'h-[50px] min-h-[50px] px-5 py-[15px] gap-2.5',
+    item: 'h-[50px] min-h-[50px] pl-6 pr-5 py-[15px] gap-3',
+    iconBox: 'min-w-[24px] min-h-[24px] w-6 h-6',
     iconClass: 'w-5 h-5',
   },
   small: {
-    item: 'h-[42px] min-h-[42px] px-[15px] py-3 gap-2.5',
+    item: 'h-[42px] min-h-[42px] pl-4 pr-[15px] py-3 gap-2.5',
+    iconBox: 'min-w-[20px] min-h-[20px] w-5 h-5',
     iconClass: 'w-[18px] h-[18px]',
   },
 };
@@ -70,15 +76,20 @@ function SnackbarItem({ snackbar }: { snackbar: SnackbarItemType }) {
   return (
     <div
       className={cn(
-        'flex items-center rounded-[10px] border shadow-sm pointer-events-auto font-semibold text-xs leading-5',
+        'flex items-center rounded-[10px] border-2 shadow-sm pointer-events-auto font-semibold text-xs leading-5 box-border',
         config.bg,
         config.border,
         size.item,
         snackbar.size === 'small' ? config.smallWidth : config.width
       )}
     >
-      <Icon className={cn(size.iconClass, config.text)} />
-      <span className={cn('whitespace-nowrap', config.text)}>{snackbar.message}</span>
+      <span
+        className={cn('flex shrink-0 items-center justify-center box-border', size.iconBox)}
+        style={{ color: config.iconColor }}
+      >
+        <Icon className={cn(size.iconClass, 'shrink-0 block')} style={{ overflow: 'visible' }} />
+      </span>
+      <span className={cn('whitespace-nowrap min-w-0', config.text)}>{snackbar.message}</span>
     </div>
   );
 }

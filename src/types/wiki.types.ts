@@ -52,6 +52,7 @@ export interface ProfileListResponse {
 
 /** 프로필 수정 시 보내는 body (보낼 필드만 선택) */
 export interface UpdateProfileRequest {
+  name?: string;
   securityAnswer?: string;
   securityQuestion?: string;
   nationality?: string;
