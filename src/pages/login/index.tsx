@@ -26,6 +26,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (isLoggedIn) {
       router.replace('/');
+      console.log('isLoggedIn', isLoggedIn);
     } else {
       setIsLoaded(true);
     }
