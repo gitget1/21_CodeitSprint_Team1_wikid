@@ -4,11 +4,8 @@ import type { AppProps } from 'next/app';
 import { useState } from 'react';
 
 import '@/styles/globals.css';
-
 import { nexonGothic } from '@/styles/nexonfont';
-
 import PageLayout from '@/components/layout/PageLayout';
-
 import SnackbarContainer from '@/components/ui/Snackbar/Snackbar';
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -29,8 +26,8 @@ export default function App({ Component, pageProps }: AppProps) {
       <div className={nexonGothic.variable}>
         <PageLayout>
           <Component {...pageProps} />
-          <SnackbarContainer />
         </PageLayout>
+        <SnackbarContainer />
       </div>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

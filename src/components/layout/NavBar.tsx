@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { useCallback, useSyncExternalStore, useRef, useState } from 'react';
+import { useCallback, useEffect, useSyncExternalStore, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { getNotifications, deleteNotification } from '@/api/notification.api';
 import { useOutsideClick } from '@/hooks/useOutsideClick';
 import { useAuthStore } from '@/stores/auth.store';
+import { useNotificationTriggerStore, useNotificationListStore } from '@/stores/notification.store';
 import { getRelativeTime } from '@/utils/formatDate';
-import type { Notification } from '@/types/notification.types';
 import BellIcon from '@/assets/icons/Bell.svg';
 import ProfileIcon from '@/assets/icons/Profile.svg';
 import MenuIcon from '@/assets/icons/Menu.svg';
@@ -72,37 +72,51 @@ function Navbar() {
   const [openMenu, setOpenMenu] = useState(false);
   const [openProfileMenu, setOpenProfileMenu] = useState(false);
   const [isNotiOpen, setIsNotiOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
   const menuRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const notiRef = useRef<HTMLDivElement>(null);
+
+  const notifications = useNotificationListStore((s) => s.notifications);
+  const setNotificationsFromApi = useNotificationListStore((s) => s.setNotificationsFromApi);
+  const removeNotification = useNotificationListStore((s) => s.removeNotification);
 
   useOutsideClick(menuRef, () => setOpenMenu(false));
   useOutsideClick(profileRef, () => setOpenProfileMenu(false));
   useOutsideClick(notiRef, () => setIsNotiOpen(false));
 
+  const refetchTrigger = useNotificationTriggerStore((s) => s.refetchTrigger);
+
   const fetchNotifications = useCallback(async () => {
     try {
       const res = await getNotifications({ page: 1, pageSize: 20 });
-      setNotifications(res.list);
+      setNotificationsFromApi(res.list);
     } catch {
       /* ignore */
     }
-  }, []);
+  }, [setNotificationsFromApi]);
+
+  useEffect(() => {
+    if (refetchTrigger > 0) queueMicrotask(() => fetchNotifications());
+  }, [refetchTrigger, fetchNotifications]);
 
   const handleToggleNoti = useCallback(() => {
     if (!isNotiOpen) fetchNotifications();
     setIsNotiOpen((prev) => !prev);
   }, [isNotiOpen, fetchNotifications]);
 
-  const handleDeleteNoti = useCallback(async (id: number) => {
-    try {
-      await deleteNotification(id);
-      setNotifications((prev) => prev.filter((n) => n.id !== id));
-    } catch {
-      /* ignore */
-    }
-  }, []);
+  const handleDeleteNoti = useCallback(
+    async (id: number) => {
+      if (id > 0) {
+        try {
+          await deleteNotification(id);
+        } catch {
+          /* ignore */
+        }
+      }
+      removeNotification(id);
+    },
+    [removeNotification]
+  );
 
   return (
     <div className="h-15 xl:h-20 px-5 lg:px-20 py-4 flex justify-between items-center border-b border-gray-200">

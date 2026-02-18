@@ -94,6 +94,31 @@ function SnackbarItem({ snackbar }: { snackbar: SnackbarItemType }) {
   );
 }
 
+const snackbarListContent = (snackbars: SnackbarItemType[]) => (
+  <>
+    {snackbars.map((item) => (
+      <SnackbarItem key={item.id} snackbar={item} />
+    ))}
+  </>
+);
+
+/**
+ * 스낵바 목록을 링크와 콘텐츠 사이 등 원하는 위치에 인라인으로 렌더링.
+ * 위키 페이지에서 사용.
+ */
+export function SnackbarContainerInline() {
+  const snackbars = useSnackbarStore((s) => s.snackbars);
+  if (snackbars.length === 0) return null;
+  return (
+    <div
+      className="flex w-full min-w-0 flex-col items-center gap-3 py-3 pointer-events-none"
+      aria-live="polite"
+    >
+      {snackbarListContent(snackbars)}
+    </div>
+  );
+}
+
 /**
  * 스낵바 목록을 body에 포털로 렌더링하는 컨테이너.
  * _app 또는 레이아웃에 한 번만 넣으면 됨.
@@ -111,12 +136,10 @@ export function SnackbarContainer() {
 
   return createPortal(
     <div
-      className="fixed bottom-6 left-0 right-0 z-[9999] flex flex-col items-center gap-3 pointer-events-none"
+      className="fixed top-24 left-0 right-0 z-[9999] flex flex-col items-center gap-3 px-6 pointer-events-none"
       aria-live="polite"
     >
-      {snackbars.map((item) => (
-        <SnackbarItem key={item.id} snackbar={item} />
-      ))}
+      {snackbarListContent(snackbars)}
     </div>,
     document.body
   );

@@ -54,11 +54,15 @@ export const updateProfile = async (code: string, data: UpdateProfileRequest): P
 
 /**
  * 프로필 수정 중 체크 (GET /profiles/{code}/ping)
- * - 5분 이내 프로필 수정 여부 상태 확인 (registeredAt, userId)
+ * - 200 + body: 수정 중 (registeredAt, userId)
+ * - 204 No Content 또는 body 없음: 수정 중인 사람 없음 → null 반환
  */
-export const getProfilePing = async (code: string): Promise<ProfilePingResponse> => {
+export const getProfilePing = async (code: string): Promise<ProfilePingResponse | null> => {
   const response = await instance.get(`/profiles/${code}/ping`);
-  return response.data;
+  if (response.status === 204 || response.data == null) return null;
+  const data = response.data as ProfilePingResponse;
+  if (data.userId == null && (data as { user_id?: number }).user_id == null) return null;
+  return data;
 };
 
 /**
@@ -70,4 +74,12 @@ export const getProfilePing = async (code: string): Promise<ProfilePingResponse>
 export const ping = async (code: string, securityAnswer: string): Promise<ProfilePingResponse> => {
   const response = await instance.post(`/profiles/${code}/ping`, { securityAnswer });
   return response.data;
+};
+
+/**
+ * 프로필 수정 세션 해제 (DELETE /profiles/{code}/ping)
+ * - 타임아웃/취소/확인 시 호출해 즉시 '아무도 수정 중이 아님' 상태로 되돌림
+ */
+export const releaseProfilePing = async (code: string): Promise<void> => {
+  await instance.delete(`/profiles/${code}/ping`);
 };
