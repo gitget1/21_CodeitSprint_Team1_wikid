@@ -11,7 +11,7 @@ import NumberIcon from '@/assets/icons/ic_number.svg';
 import ImageIcon from '@/assets/icons/ic_image.svg';
 import EditorLinkIcon from '@/assets/icons/ic_link.svg';
 import VideoIcon from '@/assets/icons/ic_video.svg';
-import ChevronDownIcon from '@/assets/icons/ChevronDown.svg';
+import { ChevronDownIcon } from '@/components/ui/ChevronDownIcon';
 import type { Profile, UpdateProfileRequest } from '@/types/wiki.types';
 
 export interface WikiEditorToolbarProps {

@@ -3,7 +3,7 @@ import type { RefObject } from 'react';
 
 import ProfileIcon from '@/assets/icons/Profile.svg';
 import CameraIcon from '@/assets/icons/ic_camera.svg';
-import ChevronDownIcon from '@/assets/icons/ChevronDown.svg';
+import { ChevronDownIcon } from '@/components/ui/ChevronDownIcon';
 import { PROFILE_LABELS, PROFILE_PREVIEW_KEYS } from '@/utils/wiki.constants';
 import { formatProfileValue } from '@/utils/wiki.utils';
 import type { Profile, UpdateProfileRequest } from '@/types/wiki.types';
