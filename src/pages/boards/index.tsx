@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 import Searchbar from '@/components/ui/SearchBar';
 import Dropdown from '@/components/ui/Dropdown/Dropdown';
 import Button from '@/components/ui/Button/Button';
 import Pagination from '@/components/ui/Pagination/Pagination';
-import LikesIcon from '@/assets/icons/ic_heart.svg';
 import useArticles from '@/hooks/useBoard';
 import { useArticlesStore } from '@/stores/boards.store';
 import ArticleBestCard from '@/components/ui/Board/ArticleBestCard';
 import ArticleMobileItem from '@/components/ui/Board/ArticleMobileItem';
 import ArticleTableRow from '@/components/ui/Board/ArticleTableRow';
+import { useAuthStore } from '@/stores/auth.store';
 
 export default function BoardsPage() {
   const { fetchArticles } = useArticles();
+  const { isLoggedIn } = useAuthStore();
   const { articles, isLoading, error } = useArticlesStore();
   const [search, setSearch] = useState<string>('');
   const [q, setQ] = useState<string>('');
@@ -22,6 +24,7 @@ export default function BoardsPage() {
   ];
   const [option, setOption] = useState<string>('recent');
   const [page, setPage] = useState<number>(1);
+  const router = useRouter();
   const PAGE_SIZE = 10;
   useEffect(() => {
     fetchArticles();
@@ -50,12 +53,19 @@ export default function BoardsPage() {
         : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
   const pagedList = list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
+  const handleCreate = async () => {
+    if (!isLoggedIn) {
+      alert('로그인 후 이용할 수 있어요.');
+      router.push('/login');
+      return;
+    }
+    router.push('/boards/createboard');
+  };
   return (
     <div className="mt-[60px] w-full px-3 md:max-w-[1200px] md:mx-auto md:px-8">
       <div className=" flex  justify-between">
         <h1 className="text-[32px] font-semibold text-[rgb(71_77_102)]">베스트 게시글</h1>
-        <Button variant="primary" size="md">
+        <Button variant="primary" size="md" onClick={handleCreate}>
           게시물 등록하기
         </Button>
       </div>
