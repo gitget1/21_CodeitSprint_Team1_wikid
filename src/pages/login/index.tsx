@@ -28,7 +28,7 @@ export default function LoginPage() {
       router.replace('/');
       console.log('isLoggedIn', isLoggedIn);
     } else {
-      setIsLoaded(true);
+      queueMicrotask(() => setIsLoaded(true));
     }
   }, [isLoggedIn, router]);
 
