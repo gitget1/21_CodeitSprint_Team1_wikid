@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useState } from 'react';
 
 import useSignUp from '@/hooks/useSignUp';
 import Button from '@/components/ui/Button/Button';
 import FormInput from '@/components/common/FormInput';
+import SignupPageSkeleton from './SignupPageSkeleton';
 import { signupSchema, type SignupForm } from '@/utils/validators';
 
 export default function SignupPage() {
@@ -17,6 +19,15 @@ export default function SignupPage() {
   });
 
   const signUp = useSignUp();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
+  if (!isLoaded) {
+    return <SignupPageSkeleton />;
+  }
 
   return (
     <div className="flex flex-col items-center m-auto my-15">
