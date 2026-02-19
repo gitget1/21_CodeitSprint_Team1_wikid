@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Avatar } from './common/Avatar';
+import { Avatar } from '../common/Avatar';
 import LinkIcon from '@/assets/icons/LinkIcon.svg';
 
 type WikiCardProps = {
@@ -9,6 +9,7 @@ type WikiCardProps = {
   job: string;
   wikiUrl: string;
   profileImage?: string;
+  priority?: boolean;
 };
 
 const WikiCard = ({ name, location, job, wikiUrl, profileImage }: WikiCardProps) => {
@@ -18,8 +19,7 @@ const WikiCard = ({ name, location, job, wikiUrl, profileImage }: WikiCardProps)
   return (
     <Link 
       href={wikiUrl} 
-      className='block w-full lg:h-[142px] md:h-[142px] h-auto bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] lg:rounded-[10px] md:rounded-[10px] rounded-[14px] overflow-hidden hover:shadow-[0_4px_25px_rgba(0,0,0,0.12)] transition-shadow duration-200'
-    >
+      className='block w-full lg:h-[142px] md:h-[142px] h-auto bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] lg:rounded-[10px] md:rounded-[10px] rounded-[14px] overflow-hidden hover:shadow-[0_4px_25px_rgba(0,0,0,0.12)] transition-shadow duration-200'>
       <div className='lg:px-9 md:px-9 px-[25px] lg:py-6 md:py-6 py-[21px] flex lg:gap-[35px] md:gap-[32px] gap-[20px] h-full'>
         
         <Avatar size="wikiCard" src={profileImage} alt={`${name}의 프로필`} />

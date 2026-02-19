@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getProfiles } from '@/api/wiki.api';
 import { useDebounce } from '@/hooks/useDebounce'; 
 import Searchbar from '@/components/ui/SearchBar';
-import WikiCard from '@/components/WikiCard';
+import WikiCard from '@/components/wiki/WikiCard';
 import EmptyState from '@/components/common/EmptyState';
 import Pagination from '@/components/ui/Pagination/Pagination';
 
