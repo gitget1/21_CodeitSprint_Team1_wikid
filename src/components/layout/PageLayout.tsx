@@ -14,7 +14,9 @@ function PageLayout({ children }: PageLayoutProps) {
         <Navbar />
       </header>
 
-      <main className="flex w-full mx-auto">{children}</main>
+      <main className="flex min-w-0 flex-1 w-full max-w-full mx-auto overflow-x-hidden">
+        {children}
+      </main>
 
       <footer>
         <Footer />
