@@ -1,16 +1,27 @@
-import React, { useState } from 'react';
-
+import React from 'react';
 import ChevronLeft from '@/assets/icons/ChevronLeft.svg';
 import ChevronRight from '@/assets/icons/ChevronRight.svg';
+
 type Props = {
   currentPage: number;
+  totalCount: number;    // 📌 부모(WikilistPage)로부터 전체 개수를 받음
+  pageSize: number;      // 📌 한 페이지에 몇 개씩 보여주는지 받음 (위물은 3, 게시판은 10 등)
   onPageChange: (page: number) => void;
 };
-const Pagination = ({ currentPage, onPageChange }: Props) => {
-  const totalPages = 5;
-  const pages = [1, 2, 3, 4, 5];
+
+const Pagination = ({ currentPage, totalCount, pageSize, onPageChange }: Props) => {
+  // 📌 1. 실제 필요한 전체 페이지 수 계산 (예: 4개 데이터 / 3개씩 = 2페이지)
+  const totalPagesCount = Math.ceil(totalCount / pageSize);
+
+  // 📌 2. 0이거나 1페이지밖에 없을 경우를 대비해 최소 1페이지는 배열에 넣어줌
+  const finalTotalPages = totalPagesCount > 0 ? totalPagesCount : 1;
+
+  // 📌 3. 계산된 페이지 수만큼만 숫자 배열 생성 (예: [1, 2])
+  const pages = Array.from({ length: finalTotalPages }, (_, i) => i + 1);
+
   return (
     <div className="flex items-center justify-center gap-1 md:gap-2.5">
+      {/* 이전 버튼 */}
       <button
         onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
@@ -22,6 +33,7 @@ const Pagination = ({ currentPage, onPageChange }: Props) => {
         <ChevronLeft className="w-[18px] h-[18px] md:w-6 md:h-6" />
       </button>
 
+      {/* 📌 동적으로 계산된 페이지 번호들만 출력 */}
       {pages.map((page) => (
         <button
           key={page}
@@ -39,6 +51,7 @@ const Pagination = ({ currentPage, onPageChange }: Props) => {
         </button>
       ))}
 
+      {/* 다음 버튼 */}
       <button
         onClick={() => currentPage < pages.length && onPageChange(currentPage + 1)}
         disabled={currentPage === pages.length}
