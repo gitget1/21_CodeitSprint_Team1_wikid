@@ -21,6 +21,13 @@ export interface RefreshTokenResponse {
   accessToken: string;
 }
 
+/** 비밀번호 변경 요청 */
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  password: string;
+  passwordConfirmation: string;
+}
+
 /** 인증 응답의 프로필 요약 (id, code) v */
 export interface AuthProfile {
   id: number;

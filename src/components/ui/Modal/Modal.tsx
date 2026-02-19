@@ -166,7 +166,7 @@ export function QuizModal({
               'w-full rounded-[10px] border bg-[#F7F7FA] px-4 text-sm outline-none transition-colors placeholder:text-[#8F95B2]',
               isSmall ? 'mb-2 h-[40px]' : 'mb-2 h-[45px]',
               error
-                ? 'border-[#E46969] bg-[#FFEFEF]'
+                ? 'border-[#E46969] bg-[#FBEDED]'
                 : 'border-transparent focus:border-[#4CBFA4] focus:bg-white'
             )}
           />
@@ -281,10 +281,10 @@ export function ConfirmModal({
           <button
             onClick={onConfirm}
             className={cn(
-              'rounded-[10px] py-[11px] text-white transition-colors',
+              'flex items-center justify-center rounded-[10px] text-white transition-colors',
               confirmVariant === 'danger'
-                ? 'flex h-[40px] w-[116px] items-center justify-center gap-2.5 px-5 bg-[#D14343] hover:bg-[#BC3B3B]'
-                : 'h-[40px] min-w-[120px] py-[11px] px-5 gap-[10px] font-semibold bg-[#4CBFA4] hover:bg-[#3AAA91]'
+                ? 'h-[40px] w-[116px] gap-2.5 px-5 bg-[#D14343] hover:bg-[#BC3B3B]'
+                : 'h-[40px] w-[65px] gap-[10px] whitespace-nowrap px-[20px] py-[11px] text-[14px] font-semibold leading-none bg-[#4CBFA4] hover:bg-[#3AAA91]'
             )}
             style={
               confirmVariant === 'danger'

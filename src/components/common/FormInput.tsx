@@ -9,15 +9,16 @@ interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: FieldError;
   isSubmitted?: boolean;
+  showLabel?: boolean;
 }
 
 const FormInput = forwardRef<HTMLInputElement, FormInputProps>(function FormInput(
-  { label, type = 'text', placeholder, error, isSubmitted, className, name, ...props },
+  { label, type = 'text', placeholder, error, isSubmitted, className, name, showLabel = true, ...props },
   ref
 ) {
   return (
     <div>
-      <span className="text-md-regular text-gray-500">{label}</span>
+      {showLabel && <span className="text-md-regular text-gray-500">{label}</span>}
       <label
         htmlFor={name}
         className={`${labelStyle} ${error ? 'bg-secondary-red-100' : 'bg-gray-100'}`}
