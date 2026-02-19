@@ -132,7 +132,7 @@ export default function BoardsPage() {
         </tbody>
       </table>
       <div className="mt-[60px] mb-[100px]">
-        <Pagination currentPage={page} onPageChange={setPage} />
+        <Pagination currentPage={page} onPageChange={setPage} totalCount={100} pageSize={10} />
       </div>
     </div>
   );
