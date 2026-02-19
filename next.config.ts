@@ -1,6 +1,16 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: '**.domain.com', pathname: '/**' },
+      { protocol: 'http', hostname: '**.domain.com', pathname: '/**' },
+      { protocol: 'https', hostname: '**.domain.co.kr', pathname: '/**' },
+      { protocol: 'http', hostname: '**.domain.co.kr', pathname: '/**' },
+      { protocol: 'https', hostname: '**.s3.ap-northeast-2.amazonaws.com', pathname: '/**' },
+      { protocol: 'https', hostname: '**.amazonaws.com', pathname: '/**' },
+    ],
+  },
   turbopack: {
     rules: {
       '*.svg': {

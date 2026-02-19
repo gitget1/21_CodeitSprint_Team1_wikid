@@ -3,6 +3,8 @@ export interface Notification {
   id: number;
   content: string;
   createdAt: string;
+  /** 알림 종류 (예: failure 등) */
+  type?: string;
 }
 
 /** 알림 목록 조회 쿼리 파라미터 (GET /notifications, teamId는 baseURL에 포함) */
