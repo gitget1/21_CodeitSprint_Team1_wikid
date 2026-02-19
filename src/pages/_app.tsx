@@ -10,6 +10,7 @@ import { nexonGothic } from '@/styles/nexonfont';
 import PageLayout from '@/components/layout/PageLayout';
 
 import SnackbarContainer from '@/components/ui/Snackbar/Snackbar';
+import AlertDialogContainer from '@/components/ui/AlertDialog/AlertDialogContainer';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
@@ -30,6 +31,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <PageLayout>
           <Component {...pageProps} />
           <SnackbarContainer />
+          <AlertDialogContainer />
         </PageLayout>
       </div>
       <ReactQueryDevtools initialIsOpen={false} />
