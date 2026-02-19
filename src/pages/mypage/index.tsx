@@ -2,10 +2,12 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import useChangePassword from '@/hooks/useChangePassword';
 import useCreateProfile from '@/hooks/useCreateProfile';
 import { useAuthStore } from '@/stores/auth.store';
+import { getProfile } from '@/api/wiki.api';
 import FormInput from '@/components/common/FormInput';
 import Button from '@/components/ui/Button/Button';
 import MyPageSkeleton from './MyPageSkeleton';
@@ -17,8 +19,15 @@ export default function MyPage() {
   const createProfileMutation = useCreateProfile();
   const user = useAuthStore((state) => state.user);
   const hasProfile = !!user?.profile?.code;
+  const profileCode = user?.profile?.code || '';
   const router = useRouter();
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const { data: profileData } = useQuery({
+    queryKey: ['profile', profileCode],
+    queryFn: () => getProfile(profileCode),
+    enabled: hasProfile && !!profileCode,
+  });
 
   useEffect(() => {
     if (!isLoading) {
@@ -52,10 +61,6 @@ export default function MyPage() {
   };
 
   const handleCreateWiki = (data: CreateWikiForm) => {
-    if (hasProfile) {
-      alert('이미 위키가 생성되었습니다.');
-      return;
-    }
     createProfileMutation.mutate(data);
   };
 
@@ -122,25 +127,30 @@ export default function MyPage() {
           <span className="text-md-regular text-gray-500">위키 생성하기</span>
           <FormInput
             label="질문"
-            placeholder="질문을 입력해 주세요"
+            placeholder={hasProfile && profileData?.securityQuestion ? `질문 : ${profileData.securityQuestion}` : '질문을 입력해 주세요'}
             error={errorsWiki.securityQuestion}
             isSubmitted={isSubmittedWiki}
             showLabel={false}
+            disabled={hasProfile}
             {...registerWiki('securityQuestion')}
           />
           <FormInput
             label="답"
-            placeholder="답을 입력해 주세요"
+            placeholder={hasProfile ? `답 : 보안상으로 미공개` : '답을 입력해 주세요'}
             error={errorsWiki.securityAnswer}
             isSubmitted={isSubmittedWiki}
             showLabel={false}
+            disabled={hasProfile}
             {...registerWiki('securityAnswer')}
           />
+          {hasProfile && (
+            <p className="text-md-regular text-primary-green-300 mt-[10px]">위키가 이미 생성되었습니다</p>
+          )}
         </div>
         <div className="flex justify-end">
           <Button 
             type="submit" 
-            disabled={isSubmittingWiki || createProfileMutation.isPending} 
+            disabled={hasProfile || isSubmittingWiki || createProfileMutation.isPending} 
             className="w-[89px] !min-w-0 px-5 h-[40px]"
           >
             생성하기
