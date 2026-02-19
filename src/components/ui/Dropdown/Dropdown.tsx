@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 
 interface Option {
   label: string;
@@ -9,15 +11,18 @@ interface DropdownProps {
   options: Option[];
   placeholder?: string;
   value?: string;
-  className?:string;
+  className?: string;
   onChange?: (value: string) => void;
 }
 
-const Dropdown = ({ options, value,className, placeholder, onChange }: DropdownProps) => {
+const Dropdown = ({ options, value, className, placeholder, onChange }: DropdownProps) => {
   const [open, setOpen] = useState(false);
   const selected = options.find((e) => e.value === value);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useOutsideClick(dropdownRef, () => setOpen(false));
   return (
-    <div className={className}>
+    <div ref={dropdownRef} className={className}>
       <div
         onClick={() => setOpen((prev) => !prev)}
         className=" min-w-[120px] h-[45px] px-[20px] rounded-[10px] text-sm border border-gray-300
