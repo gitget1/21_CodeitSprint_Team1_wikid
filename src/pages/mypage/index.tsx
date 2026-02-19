@@ -28,7 +28,6 @@ export default function MyPage() {
     queryFn: () => getProfile(profileCode),
     enabled: hasProfile && !!profileCode,
   });
-
   useEffect(() => {
     if (!isLoading) {
       setIsLoaded(true);
