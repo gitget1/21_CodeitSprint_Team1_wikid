@@ -46,9 +46,14 @@ export const getProfile = async (code: string): Promise<Profile> => {
 };
 /**
  * 프로필 수정 (PATCH /profiles/{code})
+ * - body.image는 백엔드에서 URL 또는 null만 허용하므로, 빈 문자열은 null로 변환
  */
 export const updateProfile = async (code: string, data: UpdateProfileRequest): Promise<Profile> => {
-  const response = await instance.patch(`/profiles/${code}`, data);
+  const body = { ...data };
+  if ('image' in body && body.image === '') {
+    (body as Record<string, unknown>).image = null;
+  }
+  const response = await instance.patch(`/profiles/${code}`, body);
   return response.data;
 };
 
