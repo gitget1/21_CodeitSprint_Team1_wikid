@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Link from 'next/link';
 import { Avatar } from '../common/Avatar';
+import { useSnackbar } from '@/components/ui/Snackbar/Snackbar';
+import { copyWikiLink } from '@/utils/copyToClipboard';
 import LinkIcon from '@/assets/icons/LinkIcon.svg';
 
 type WikiCardProps = {
@@ -15,6 +17,23 @@ type WikiCardProps = {
 const WikiCard = ({ name, location, job, wikiUrl, profileImage }: WikiCardProps) => {
   // 실제 브라우저에 표시될 전체 URL (필요 시 도메인 추가 가능)
   const displayUrl = `https://www.wikied.kr${wikiUrl}`;
+
+  const { showSnackbar } = useSnackbar();
+  const code = wikiUrl.split('/').pop() || "";
+
+  const handleCopyLink = useCallback(async (e: React.MouseEvent) => {
+    // 부모 Link 태그의 페이지 이동 막기
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!code) return;
+
+    const ok = await copyWikiLink(code);
+
+    if (ok) {
+      showSnackbar('링크가 복사되었습니다.', 'success');
+    }
+  }, [code, showSnackbar]);
 
   return (
     <Link 
@@ -42,7 +61,7 @@ const WikiCard = ({ name, location, job, wikiUrl, profileImage }: WikiCardProps)
 
           {/* 오른쪽: 링크 박스 섹션 */}
           <div className='flex flex-col justify-end items-start md:items-end mt-3 md:mt-0 min-w-0'>
-            <div className='lg:h-[34px] md:h-[34px] h-[30px] rounded-[10px] px-[10px] py-[5px] bg-primary-green-100 
+            <div onClick={handleCopyLink} className='lg:h-[34px] md:h-[34px] h-[30px] rounded-[10px] px-[10px] py-[5px] bg-primary-green-100 
                             w-full max-w-[240px] min-w-0 flex-shrink-0'>
               <div className='flex w-full h-full items-center gap-1.5'>
                 <LinkIcon className="w-4 h-4 text-primary-green-200 flex-shrink-0" />
