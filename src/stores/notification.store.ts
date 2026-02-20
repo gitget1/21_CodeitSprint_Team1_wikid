@@ -19,10 +19,13 @@ interface NotificationListState {
   setNotificationsFromApi: (list: Notification[]) => void;
   addLocalNotification: (content: string) => void;
   removeNotification: (id: number) => void;
+  /** 로그아웃 시 호출해 다른 계정에 알림이 남지 않도록 초기화 */
+  clearAll: () => void;
 }
 
 export const useNotificationListStore = create<NotificationListState>((set) => ({
   notifications: [],
+  clearAll: () => set({ notifications: [] }),
   setNotificationsFromApi: (list) =>
     set((s) => ({
       notifications: [...s.notifications.filter((n) => n.id < 0), ...list],
