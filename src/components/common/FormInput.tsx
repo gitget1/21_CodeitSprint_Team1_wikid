@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
 import { FieldError } from 'react-hook-form';
 
 import Input from '@/components/ui/Input/Input';
@@ -10,18 +10,33 @@ interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: FieldError;
   isSubmitted?: boolean;
   showLabel?: boolean;
+  isValid?: boolean;
 }
 
 const FormInput = forwardRef<HTMLInputElement, FormInputProps>(function FormInput(
-  { label, type = 'text', placeholder, error, isSubmitted, className, name, showLabel = true, ...props },
+  { label, type = 'text', placeholder, error, isSubmitted, className, name, showLabel = true, isValid, onChange, ...props },
   ref
 ) {
+  const [inputValue, setInputValue] = useState('');
+  
+  const getLabelBgColor = () => {
+    if (error) return 'bg-secondary-red-100';
+    const isFieldValid = isValid ?? (!!inputValue && !error);
+    if (isFieldValid) return 'bg-primary-green-100';
+    return 'bg-gray-100';
+  };
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+    onChange?.(e);
+  };
+
   return (
     <div>
       {showLabel && <span className="text-md-regular text-gray-500">{label}</span>}
       <label
         htmlFor={name}
-        className={`${labelStyle} ${error ? 'bg-secondary-red-100' : 'bg-gray-100'}`}
+        className={`${labelStyle} ${getLabelBgColor()}`}
       >
         <Input
           ref={ref}
@@ -32,6 +47,7 @@ const FormInput = forwardRef<HTMLInputElement, FormInputProps>(function FormInpu
           aria-invalid={isSubmitted ? (error ? 'true' : 'false') : undefined}
           name={name}
           error={false}
+          onChange={handleChange}
           {...props}
         />
       </label>
