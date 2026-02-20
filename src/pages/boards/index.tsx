@@ -11,13 +11,24 @@ import ArticleBestCard from '@/components/ui/Board/ArticleBestCard';
 import ArticleMobileItem from '@/components/ui/Board/ArticleMobileItem';
 import ArticleTableRow from '@/components/ui/Board/ArticleTableRow';
 import { useAuthStore } from '@/stores/auth.store';
-
+import BoardsPageSkeleton from '@/components/ui/Skeleton/BoardsPageSkeleton';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from '@/components/ui/AlertDialog/AlertDialog';
 export default function BoardsPage() {
   const { fetchArticles } = useArticles();
   const { isLoggedIn } = useAuthStore();
   const { articles, isLoading, error } = useArticlesStore();
   const [search, setSearch] = useState<string>('');
   const [q, setQ] = useState<string>('');
+  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState<boolean>(false);
   const sortOptions = [
     { label: '최신순', value: 'recent' },
     { label: '좋아요순', value: 'likes' },
@@ -38,7 +49,7 @@ export default function BoardsPage() {
 
     return () => clearTimeout(t);
   }, [search]);
-  if (isLoading) return <div>로딩...</div>;
+  if (isLoading) return <BoardsPageSkeleton />;
   if (error) return <div>{error}</div>;
 
   const list = (articles?.list ?? [])
@@ -53,13 +64,13 @@ export default function BoardsPage() {
         : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
   const pagedList = list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const handleCreate = async () => {
+  const handleCreate = () => {
     if (!isLoggedIn) {
-      alert('로그인 후 이용할 수 있어요.');
-      router.push('/login');
+      setIsLoginDialogOpen(true);
       return;
     }
-    router.push('/boards/createboard');
+
+    router.push('/addboard');
   };
   return (
     <div className="mt-[60px] w-full px-3 md:max-w-[1200px] md:mx-auto md:px-8">
@@ -134,6 +145,28 @@ export default function BoardsPage() {
       <div className="mt-[60px] mb-[100px]">
         <Pagination currentPage={page} onPageChange={setPage} totalCount={100} pageSize={10} />
       </div>
+      <AlertDialog open={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>로그인이 필요해요</AlertDialogTitle>
+            <AlertDialogDescription>로그인 후 이용할 수 있어요.</AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel asChild>
+              <Button variant="secondary">취소</Button>
+            </AlertDialogCancel>
+
+            <AlertDialogAction
+              onClick={() => {
+                router.push('/login');
+              }}
+            >
+              로그인 하러가기
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

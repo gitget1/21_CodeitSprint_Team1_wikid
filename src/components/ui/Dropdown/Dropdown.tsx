@@ -22,7 +22,7 @@ const Dropdown = ({ options, value, className, placeholder, onChange }: Dropdown
 
   useOutsideClick(dropdownRef, () => setOpen(false));
   return (
-    <div ref={dropdownRef} className={className}>
+    <div ref={dropdownRef} className={`relative ${className}`}>
       <div
         onClick={() => setOpen((prev) => !prev)}
         className=" min-w-[120px] h-[45px] px-[20px] rounded-[10px] text-sm border border-gray-300
@@ -34,7 +34,19 @@ bg-white flex items-center justify-between"
         <span className="text-gray-400">▾</span>{' '}
       </div>
       {open && (
-        <div className="  rounded-[10px] border border-gray-300 flex flex-col mt-[2px] ">
+        <div
+          className="absolute
+        top-full
+        left-0
+        mt-[4px]
+        w-full
+        rounded-[10px]
+        border border-gray-300
+        bg-white
+        shadow-md
+        z-50
+        flex flex-col"
+        >
           {options.map((option) => (
             <div
               key={option.value}
