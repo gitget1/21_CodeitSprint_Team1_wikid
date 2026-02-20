@@ -6,6 +6,7 @@ import Searchbar from '@/components/ui/SearchBar';
 import WikiCard from '@/components/wiki/WikiCard';
 import EmptyState from '@/components/common/EmptyState';
 import Pagination from '@/components/ui/Pagination/Pagination';
+import WikilistPageSkeleton from './WikilistPageSkeleton';
 
 const PAGE_SIZE = 3;
 
@@ -32,8 +33,10 @@ export default function WikilistPage() {
   const wikiList = data?.list || [];
   const totalCount = data?.totalCount || 0;
 
-  if (isLoading) return <div className="min-h-screen flex items-center justify-center text-gray-400">로딩 중...</div>;
-  if (isError) return <div className="min-h-screen flex items-center justify-center text-red-400">데이터를 불러오는 중 에러가 발생했습니다.</div>;
+  // 기존 로딩 처리를 스켈레톤으로 교체
+  if (isLoading) return <WikilistPageSkeleton />;
+
+  if (isError) return <div className='min-h-screen flex items-center justify-center text-red-400'>데이터를 불러오는 중 에러가 발생했습니다.</div>
 
   return (
     <section className="min-h-screen bg-white pb-20 w-full">
