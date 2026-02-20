@@ -1,13 +1,16 @@
-import { AxiosError, InternalAxiosRequestConfig } from 'axios';
-import { useAuthStore } from '@/stores/auth.store';
-import { refreshToken } from './auth.api';
 import type { AxiosInstance } from 'axios';
+import { AxiosError, InternalAxiosRequestConfig } from 'axios';
+
+import { useAuthStore } from '@/stores/auth.store';
+import { useNotificationListStore } from '@/stores/notification.store';
+
+import { refreshToken } from './auth.api';
 
 // 토큰 갱신 상태 관리
 let isRefreshing = false;
 let failedQueue: Array<{
-  resolve: (value?: any) => void;
-  reject: (error?: any) => void;
+  resolve: (value?: string | null) => void;
+  reject: (error?: unknown) => void;
 }> = [];
 
 const processQueue = (error: AxiosError | null, token: string | null = null) => {
@@ -36,15 +39,15 @@ export const setupRequestInterceptor = (instance: AxiosInstance) => {
   );
 };
 
-
 export const setupResponseInterceptor = (instance: AxiosInstance) => {
   instance.interceptors.response.use(
     (response) => response,
     async (error: AxiosError) => {
       const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
- 
+
       if (error.response?.status === 401 && !originalRequest._retry) {
         if (originalRequest.url?.includes('/auth/refresh-token')) {
+          useNotificationListStore.getState().clearAll();
           useAuthStore.getState().clearLogin();
           if (typeof window !== 'undefined') {
             window.location.href = '/login';
@@ -73,6 +76,7 @@ export const setupResponseInterceptor = (instance: AxiosInstance) => {
         const refreshTokenValue = useAuthStore.getState().refreshToken;
 
         if (!refreshTokenValue) {
+          useNotificationListStore.getState().clearAll();
           useAuthStore.getState().clearLogin();
           if (typeof window !== 'undefined') {
             window.location.href = '/login';
@@ -98,6 +102,7 @@ export const setupResponseInterceptor = (instance: AxiosInstance) => {
         } catch (refreshError) {
           // refresh token도 만료되었거나 실패한 경우
           processQueue(refreshError as AxiosError, null);
+          useNotificationListStore.getState().clearAll();
           useAuthStore.getState().clearLogin();
           if (typeof window !== 'undefined') {
             window.location.href = '/login';

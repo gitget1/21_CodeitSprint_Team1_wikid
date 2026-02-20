@@ -25,6 +25,8 @@ export interface WikiPageProfileEditProps {
   showProfileImage: (url: string | undefined | null) => boolean;
   markProfileImageFailed: (url: string) => void;
   handleProfileImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  sessionTimeLeft: number;
+  formatSessionTime: () => string;
 }
 
 export interface WikiPageViewProps {
@@ -115,13 +117,15 @@ export function WikiPageView({
                   onEditorImageSelect={onEditorImageSelect}
                   onEditorVideoInsert={onEditorVideoInsert}
                   onStartEdit={onStartEdit}
+                  sessionTimeLeft={profileEdit.sessionTimeLeft}
+                  formatSessionTime={profileEdit.formatSessionTime}
                 />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="shrink-0 max-[744px]:w-full">
+        <div className="shrink-0 max-[744px]:w-full min-[745px]:mr-32 min-[1920px]:mr-32">
           <WikiProfileSidebar
             isEditMode={profileEdit.isEditMode}
             profile={profile}

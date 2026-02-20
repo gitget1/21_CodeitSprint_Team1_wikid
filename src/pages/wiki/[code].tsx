@@ -98,10 +98,10 @@ export default function WikiPage({ initialProfile, code: codeFromProps }: WikiPa
   }, [code, initialProfile]);
 
   useEffect(() => {
-    if (profile && isMyWiki && isValidImage(profile.image)) {
+    if (profile && isMyWiki && !profileEdit.isEditMode && isValidImage(profile.image)) {
       setProfileImageUrl(profile.image);
     }
-  }, [profile, isMyWiki, setProfileImageUrl]);
+  }, [profile, isMyWiki, profileEdit.isEditMode, setProfileImageUrl]);
 
   useEffect(() => {
     if (profileEdit.isEditMode && editorContentRef.current) {
@@ -120,8 +120,7 @@ export default function WikiPage({ initialProfile, code: codeFromProps }: WikiPa
       if (pingData != null) {
         const editorUserId = pingData.userId ?? (pingData as { user_id?: number }).user_id;
         if (editorUserId !== user?.id) {
-          const who = editorUserId != null ? ` (userId ${editorUserId})` : '';
-          showSnackbar(`편집 중${who}. 앞 사람의 편집이 끝나면 위키 참여가 가능합니다.`, 'info');
+          showSnackbar('편집 중입니다. 앞 사람의 편집이 끝나면 위키 참여가 가능합니다.', 'info');
           return;
         }
       }
