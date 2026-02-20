@@ -7,6 +7,7 @@ import { getNotifications, deleteNotification } from '@/api/notification.api';
 import { useOutsideClick } from '@/hooks/useOutsideClick';
 import { useAuthStore } from '@/stores/auth.store';
 import { useNotificationTriggerStore, useNotificationListStore } from '@/stores/notification.store';
+import { useAlertStore } from '@/stores/alert.store';
 import { getRelativeTime } from '@/utils/formatDate';
 import BellIcon from '@/assets/icons/Bell.svg';
 import ProfileIcon from '@/assets/icons/Profile.svg';
@@ -23,6 +24,7 @@ function Navbar() {
   const user = useAuthStore((state) => state.user);
   const profileImageUrl = useAuthStore((state) => state.profileImageUrl);
   const clearLogin = useAuthStore((state) => state.clearLogin);
+  const showAlert = useAlertStore((state) => state.showAlert);
 
   const hasProfileImage = Boolean(
     profileImageUrl &&
@@ -63,7 +65,7 @@ function Navbar() {
       onClick: user?.profile?.code
         ? undefined
         : () => {
-            alert('위키를 생성해주세요');
+            showAlert('위키를 생성해주세요');
           },
     },
     {
