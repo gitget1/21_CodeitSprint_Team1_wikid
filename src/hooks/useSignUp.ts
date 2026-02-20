@@ -17,8 +17,16 @@ export default function useSignUp() {
       });
     },
     onError: (error: AxiosError<{ message: string }>) => {
-      const message = error.response?.data?.message || '회원가입에 실패했습니다.';
-      showAlert(message);
+      const serverMessage = error.response?.data?.message || '';
+      const statusCode = error.response?.status;
+      
+      // 임시 조치: 500 에러 + Internal Server Error 메시지
+      if (statusCode === 500 && serverMessage.toLowerCase().includes('internal server error')) {
+        showAlert('이미 존재하는 이름일 수 있습니다.\n 다른 이름으로 시도해주세요.');
+      } else {
+        const message = serverMessage || '회원가입에 실패했습니다.';
+        showAlert(message);
+      }
     },
   });
 }
