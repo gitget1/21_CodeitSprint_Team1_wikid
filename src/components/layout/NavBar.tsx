@@ -163,7 +163,7 @@ function Navbar() {
                   </span>
                 )}
                 {isNotiOpen && (
-                  <div className="absolute right-0 top-10 z-50 w-[320px] rounded-[10px] bg-[#CED8D5] p-4 shadow-xl">
+                  <div className="absolute right-0 top-10 z-50 w-[320px] rounded-[10px] bg-white p-4 shadow-xl">
                     <div className="mb-4 flex items-center justify-between">
                       <h3 className="text-lg font-bold text-[#474D66]">
                         알림 {notifications.length}개
@@ -245,7 +245,7 @@ function Navbar() {
                     e.stopPropagation();
                     setOpenProfileMenu(!openProfileMenu);
                   }}
-                  className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full ring-1 ring-gray-200 ring-offset-2 ring-offset-white"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full "
                 >
                   {hasProfileImage ? (
                     <Image
@@ -257,7 +257,7 @@ function Navbar() {
                       referrerPolicy="no-referrer"
                     />
                   ) : (
-                    <ProfileIcon className="h-5 w-5 text-gray-400" />
+                    <ProfileIcon className="h-10 w-10 text-gray-400 shrink-0" />
                   )}
                 </button>
                 {openProfileMenu && (

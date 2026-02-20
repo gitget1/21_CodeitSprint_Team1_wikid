@@ -77,8 +77,24 @@ export function WikiProfileSidebar({
             </span>
           )}
           {isEditMode && isMyWiki && (
-            <span className="absolute inset-0 grid place-items-center rounded-full bg-black/30 pointer-events-none">
-              <CameraIcon className="h-6 w-6 shrink-0 block brightness-0 invert" />
+            <span className="absolute inset-0 rounded-full bg-black/30 pointer-events-none">
+              <span
+                className="h-6 w-6"
+                style={{
+                  position: 'absolute',
+                  left: '50%',
+                  top: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <CameraIcon
+                  className="brightness-0 invert"
+                  style={{ width: '100%', height: '100%', display: 'block' }}
+                />
+              </span>
             </span>
           )}
         </button>
@@ -135,8 +151,24 @@ export function WikiProfileSidebar({
             </span>
           )}
           {isEditMode && isMyWiki && (
-            <span className="absolute inset-0 grid place-items-center rounded-full bg-black/30 pointer-events-none">
-              <CameraIcon className="h-12 w-12 shrink-0 block brightness-0 invert" />
+            <span className="absolute inset-0 rounded-full bg-black/30 pointer-events-none">
+              <span
+                className="h-12 w-12"
+                style={{
+                  position: 'absolute',
+                  left: '50%',
+                  top: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <CameraIcon
+                  className="brightness-0 invert"
+                  style={{ width: '100%', height: '100%', display: 'block' }}
+                />
+              </span>
             </span>
           )}
         </button>
@@ -173,13 +205,15 @@ export function WikiProfileSidebar({
 
   const buttonPair = (
     <>
-      <button
-        type="button"
+      <div
+        role="button"
+        tabIndex={0}
         onClick={onCancel}
-        className="h-10 w-[65px] shrink-0 rounded-[10px] border border-current text-sm font-semibold text-primary-green-300 hover:bg-gray-50"
+        onKeyDown={(e) => e.key === 'Enter' && onCancel()}
+        className="h-10 w-[65px] shrink-0 rounded-[10px] border-2 border-[#32a68a] text-sm font-semibold text-[#32a68a] hover:bg-gray-50 flex items-center justify-center cursor-pointer select-none"
       >
         취소
-      </button>
+      </div>
       <button
         type="button"
         onClick={onSave}
