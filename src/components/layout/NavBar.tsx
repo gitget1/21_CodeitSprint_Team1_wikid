@@ -151,11 +151,11 @@ function Navbar() {
                 <button
                   type="button"
                   onClick={handleToggleNoti}
-                  className="flex items-center justify-center p-1"
+                  className="flex items-center justify-center"
                   aria-expanded={isNotiOpen}
                   aria-label="알림"
                 >
-                  <BellIcon className={`text-gray-400 text-md-regular ${HOVER_GREEN}`} />
+                  <BellIcon className={`h-8 w-8 text-gray-400 ${HOVER_GREEN}`} />
                 </button>
                 {notifications.length > 0 && (
                   <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
@@ -257,7 +257,7 @@ function Navbar() {
                       referrerPolicy="no-referrer"
                     />
                   ) : (
-                    <ProfileIcon className="h-8 w-8 text-gray-400 shrink-0" />
+                    <ProfileIcon className={`h-8 w-8 text-gray-400 shrink-0 ${HOVER_GREEN}`} />
                   )}
                 </button>
                 {openProfileMenu && (
