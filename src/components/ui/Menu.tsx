@@ -15,6 +15,7 @@ function Menu({ items, onClose }: MenuProps) {
   const handleClick = (e: React.MouseEvent, itemOnClick?: () => void) => {
     e.stopPropagation();
     if (itemOnClick) {
+      e.preventDefault();
       itemOnClick();
     }
     if (onClose) {

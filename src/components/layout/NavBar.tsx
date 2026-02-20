@@ -44,7 +44,14 @@ function Navbar() {
   const userMenu = [
     { label: '위키목록', href: '/wikilist' },
     { label: '자유게시판', href: '/boards' },
-    { label: '알림', href: '/mypage' }, //알림은 클릭했을 때 어디로 가는지? 모달? 임시링크임
+    {
+      label: '알림',
+      href: '#',
+      onClick: () => {
+        handleToggleNoti();
+        setOpenMenu(false);
+      },
+    },
     { label: '마이페이지', href: '/mypage' },
   ];
 
@@ -102,6 +109,7 @@ function Navbar() {
   const handleToggleNoti = useCallback(() => {
     if (!isNotiOpen) fetchNotifications();
     setIsNotiOpen((prev) => !prev);
+    setOpenProfileMenu(false);
   }, [isNotiOpen, fetchNotifications]);
 
   const handleDeleteNoti = useCallback(
@@ -244,6 +252,7 @@ function Navbar() {
                   onClick={(e) => {
                     e.stopPropagation();
                     setOpenProfileMenu(!openProfileMenu);
+                    setIsNotiOpen(false);
                   }}
                   className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full "
                 >
@@ -276,6 +285,7 @@ function Navbar() {
             onClick={(e) => {
               e.stopPropagation();
               setOpenMenu(!openMenu);
+              setIsNotiOpen(false);
             }}
             className="flex items-center justify-center"
           >
@@ -283,6 +293,78 @@ function Navbar() {
           </button>
           {openMenu && isLoaded && (
             <Menu items={isLoggedIn ? userMenu : guestMenu} onClose={() => setOpenMenu(false)} />
+          )}
+          {isNotiOpen && isLoaded && isLoggedIn && (
+            <div className="absolute right-0 top-10 z-50 w-[320px] rounded-[10px] bg-white p-4 shadow-xl">
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="text-lg font-bold text-[#474D66]">
+                  알림 {notifications.length}개
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setIsNotiOpen(false)}
+                  className="rounded p-1 text-[#8F95B2] hover:bg-[#F7F7FA] hover:text-[#474D66]"
+                  aria-label="알림 창 닫기"
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                  >
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              {notifications.length === 0 ? (
+                <p className="py-8 text-center text-sm text-gray-500">알림이 없습니다.</p>
+              ) : (
+                <ul className="flex max-h-[320px] flex-col gap-3 overflow-y-auto">
+                  {notifications.map((noti) => (
+                    <li
+                      key={noti.id}
+                      className="flex items-start gap-3 rounded-[10px] bg-white p-4 shadow-sm"
+                    >
+                      <span
+                        className={`mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full ${noti.type === 'failure' ? 'bg-red-500' : 'bg-blue-500'}`}
+                        aria-hidden
+                      />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-[#474D66]">{noti.content}</p>
+                        <p className="mt-1 text-xs text-[#8F95B2]">
+                          {getRelativeTime(noti.createdAt)}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteNoti(noti.id)}
+                        className="shrink-0 rounded p-1 text-[#8F95B2] hover:bg-gray-100 hover:text-[#474D66]"
+                        aria-label="알림 삭제"
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden
+                        >
+                          <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           )}
         </div>
       </div>
