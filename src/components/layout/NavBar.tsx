@@ -245,19 +245,19 @@ function Navbar() {
                     e.stopPropagation();
                     setOpenProfileMenu(!openProfileMenu);
                   }}
-                  className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full "
+                  className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full "
                 >
                   {hasProfileImage ? (
                     <Image
                       src={profileImageUrl!}
                       alt="프로필"
-                      width={36}
-                      height={36}
+                      width={32}
+                      height={32}
                       className="h-full w-full object-cover"
                       referrerPolicy="no-referrer"
                     />
                   ) : (
-                    <ProfileIcon className="h-10 w-10 text-gray-400 shrink-0" />
+                    <ProfileIcon className="h-8 w-8 text-gray-400 shrink-0" />
                   )}
                 </button>
                 {openProfileMenu && (
