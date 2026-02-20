@@ -62,6 +62,7 @@ function Navbar() {
     {
       label: '로그아웃',
       onClick: () => {
+        clearAllNotifications();
         clearLogin();
         router.push('/');
       },
@@ -79,6 +80,7 @@ function Navbar() {
   const notifications = useNotificationListStore((s) => s.notifications);
   const setNotificationsFromApi = useNotificationListStore((s) => s.setNotificationsFromApi);
   const removeNotification = useNotificationListStore((s) => s.removeNotification);
+  const clearAllNotifications = useNotificationListStore((s) => s.clearAll);
 
   useOutsideClick(menuRef, () => setOpenMenu(false));
   useOutsideClick(profileRef, () => setOpenProfileMenu(false));
@@ -99,10 +101,12 @@ function Navbar() {
     if (refetchTrigger > 0) queueMicrotask(() => fetchNotifications());
   }, [refetchTrigger, fetchNotifications]);
 
-  const handleToggleNoti = useCallback(() => {
-    if (!isNotiOpen) fetchNotifications();
-    setIsNotiOpen((prev) => !prev);
-  }, [isNotiOpen, fetchNotifications]);
+  const handleToggleNoti = () => {
+    setIsNotiOpen((prev) => {
+      if (!prev) fetchNotifications();
+      return !prev;
+    });
+  };
 
   const handleDeleteNoti = useCallback(
     async (id: number) => {
@@ -243,6 +247,7 @@ function Navbar() {
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
+                    setIsNotiOpen(false);
                     setOpenProfileMenu(!openProfileMenu);
                   }}
                   className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full "

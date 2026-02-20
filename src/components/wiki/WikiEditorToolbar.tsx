@@ -22,6 +22,8 @@ export interface WikiEditorToolbarProps {
   onToolbarChange: () => void;
   editorImageInputRef: RefObject<HTMLInputElement | null>;
   onEditorVideoInsert: () => void;
+  sessionTimeLeft?: number;
+  formatSessionTime?: () => string;
 }
 
 const baseBtn =
@@ -39,6 +41,8 @@ export function WikiEditorToolbar({
   onToolbarChange,
   editorImageInputRef,
   onEditorVideoInsert,
+  sessionTimeLeft,
+  formatSessionTime,
 }: WikiEditorToolbarProps) {
   const [titleDropdownOpen, setTitleDropdownOpen] = useState(false);
   const [titleDropdownRect, setTitleDropdownRect] = useState<{ top: number; left: number } | null>(
@@ -75,13 +79,13 @@ export function WikiEditorToolbar({
   }, [titleDropdownOpen]);
 
   return (
-    <div className="flex h-[60px] min-w-0 flex-nowrap items-center overflow-x-auto overflow-y-visible border-b border-gray-200 bg-[#F7F7FA] pl-4 pr-24">
+    <div className="flex h-[60px] min-w-0 flex-nowrap items-center overflow-x-auto overflow-y-visible border-b border-gray-200 bg-[#F7F7FA] pl-4 pr-4">
       <div className={toolbarGroup}>
         <input
           type="text"
-          value={editForm.name ?? profile.name}
-          onChange={(e) => updateField('name', e.target.value)}
-          className="h-9 min-w-[100px] max-w-[200px] rounded border-0 bg-white px-3 text-base font-medium text-gray-800 shadow-sm outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-primary-green-200"
+          value={profile.name}
+          readOnly
+          className="h-9 min-w-[100px] max-w-[200px] rounded border-0 bg-[#F7F7FA] px-3 text-base font-medium text-gray-800 outline-none placeholder:text-gray-400 cursor-default"
           placeholder="이름"
         />
       </div>
@@ -240,6 +244,14 @@ export function WikiEditorToolbar({
           <EditorLinkIcon className="h-5 w-5" />
         </button>
       </div>
+      {typeof sessionTimeLeft === 'number' && formatSessionTime && (
+        <div
+          className="ml-auto shrink-0 rounded bg-gray-200/80 px-3 py-1.5 text-sm font-medium text-gray-700"
+          title="비활성 시 자동 종료"
+        >
+          남은 시간 {formatSessionTime()}
+        </div>
+      )}
     </div>
   );
 }
