@@ -30,6 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component key={router.asPath} {...pageProps} />
         </PageLayout>
         <SnackbarContainer />
+        <AlertDialogContainer />
       </div>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
