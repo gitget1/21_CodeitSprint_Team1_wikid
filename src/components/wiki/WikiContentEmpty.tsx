@@ -4,7 +4,7 @@ export interface WikiContentEmptyProps {
 
 export function WikiContentEmpty({ onStartEdit }: WikiContentEmptyProps) {
   return (
-    <div className="flex min-h-[192px] w-full max-w-full flex-col items-center justify-center gap-[10px] rounded-[10px] bg-[#F7F7FA] px-6 py-10 text-center max-[375px]:px-4 max-[375px]:py-8 min-[860px]:w-[859px] min-[860px]:px-[345px] min-[860px]:py-[40px]">
+    <div className="flex min-h-[192px] w-full max-w-full flex-col items-center justify-center gap-[10px] rounded-[10px] border border-gray-200 bg-[#F7F7FA] px-6 py-10 text-center max-[375px]:px-4 max-[375px]:py-8">
       <p className="whitespace-nowrap text-base text-gray-500 max-[375px]:whitespace-normal">
         아직 작성된 내용이 없네요.
       </p>

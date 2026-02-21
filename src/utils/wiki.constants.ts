@@ -1,8 +1,5 @@
 import type { Profile } from '@/types/wiki.types';
 
-/** ping 주기 (ms) */
-export const PING_INTERVAL_MS = 60 * 1000;
-
 /** 편집 세션 타임아웃 (5분) */
 export const EDIT_SESSION_TIMEOUT_MS = 5 * 60 * 1000;
 
