@@ -15,12 +15,17 @@ export default function AddBoard() {
     router.push('/boards');
   };
   const handleSubmit = async () => {
-    const created = await postArticle({ title, content, image });
+    const payload = {
+      title,
+      content,
+      ...(image?.trim() ? { image } : {}),
+    };
+
+    const created = await postArticle(payload);
     if (!created) return;
 
     router.push('/boards');
   };
-
   const today = new Date();
   const dateText = `${today.getFullYear()}. ${today.getMonth() + 1}. ${today.getDate()}.`;
   return (

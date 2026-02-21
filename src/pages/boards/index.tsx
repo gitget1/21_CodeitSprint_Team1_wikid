@@ -143,7 +143,12 @@ export default function BoardsPage() {
         </tbody>
       </table>
       <div className="mt-[60px] mb-[100px]">
-        <Pagination currentPage={page} onPageChange={setPage} totalCount={100} pageSize={10} />
+        <Pagination
+          currentPage={page}
+          onPageChange={setPage}
+          totalCount={list.length}
+          pageSize={PAGE_SIZE}
+        />
       </div>
       <AlertDialog open={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen}>
         <AlertDialogContent>
