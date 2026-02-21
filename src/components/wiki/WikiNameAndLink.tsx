@@ -35,9 +35,14 @@ export function WikiNameAndLink({
         <button
           type="button"
           onClick={onCopyLink}
-          className="group flex h-[34px] min-w-0 max-w-full shrink-0 items-center gap-[10px] rounded-[10px] bg-primary-green-100 px-[10px] py-[5px] text-left text-[14px] font-medium text-primary-green-300 transition-colors hover:bg-primary-green-200 hover:text-white w-full max-w-full"
+          className="group flex h-[34px] min-w-0 max-w-full shrink-0 items-center gap-[10px] rounded-[10px] bg-primary-green-100 px-[10px] py-[5px] text-left text-[14px] font-medium leading-none text-primary-green-300 transition-colors hover:bg-primary-green-200 hover:text-white w-full max-w-full"
         >
-          <LinkIcon className="h-5 w-5 shrink-0 text-primary-green-300 group-hover:text-white" />
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+            <LinkIcon
+              className="h-5 w-5 text-primary-green-300 transition-colors group-hover:text-white"
+              aria-hidden
+            />
+          </span>
           <span className="min-w-0 truncate">{linkDisplayText}</span>
         </button>
       </div>

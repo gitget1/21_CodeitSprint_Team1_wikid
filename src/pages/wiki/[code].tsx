@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import type { GetServerSideProps } from 'next';
 
 import { useAuthStore } from '@/stores/auth.store';
-import { getProfile, getProfilePing, releaseProfilePing } from '@/api/wiki.api';
+import { getProfile, getProfilePing } from '@/api/wiki.api';
 import { copyWikiLink } from '@/utils/copyToClipboard';
 import { isValidImage } from '@/utils/wiki.utils';
 import { useSnackbar } from '@/components/ui/Snackbar/Snackbar';
@@ -46,7 +46,6 @@ export default function WikiPage({ initialProfile, code: codeFromProps }: WikiPa
   const [profile, setProfile] = useState<Profile | null>(initialProfile);
   const [loading, setLoading] = useState(!initialProfile);
   const [error, setError] = useState<string | null>(null);
-
   const { showSnackbar } = useSnackbar();
 
   const profileEdit = useWikiProfileEdit({
@@ -118,17 +117,15 @@ export default function WikiPage({ initialProfile, code: codeFromProps }: WikiPa
     try {
       const pingData = await getProfilePing(code);
       if (pingData != null) {
-        const editorUserId = pingData.userId ?? (pingData as { user_id?: number }).user_id;
-        if (editorUserId !== user?.id) {
-          showSnackbar('편집 중입니다. 앞 사람의 편집이 끝나면 위키 참여가 가능합니다.', 'info');
-          return;
-        }
+        showSnackbar('편집 중입니다. 앞 사람의 편집이 끝나면 위키 참여가 가능합니다.', 'info');
+        return;
       }
     } catch {
-      // 수정 중인 사람 없음 → 퀴즈 모달 진행
+      showSnackbar('편집 상태를 확인할 수 없습니다. 잠시 후 다시 시도해 주세요.', 'error');
+      return;
     }
     profileEdit.handleStartEdit();
-  }, [isLoggedIn, router, profileEdit, code, user, showSnackbar]);
+  }, [isLoggedIn, router, profileEdit, code, showSnackbar]);
 
   const handleCopyLink = useCallback(async () => {
     if (!code) return;
@@ -136,14 +133,9 @@ export default function WikiPage({ initialProfile, code: codeFromProps }: WikiPa
     if (ok) showSnackbar('링크가 복사되었습니다.', 'success');
   }, [code, showSnackbar]);
 
-  const handleTimeoutConfirm = useCallback(async () => {
-    try {
-      await releaseProfilePing(code);
-    } catch {
-      /* 백엔드 미지원 시 무시 */
-    }
+  const handleTimeoutConfirm = useCallback(() => {
     profileEdit.setIsTimeoutOpen(false);
-  }, [code, profileEdit]);
+  }, [profileEdit]);
 
   if (loading) return <WikiPageLoading />;
   if (error || !profile) {

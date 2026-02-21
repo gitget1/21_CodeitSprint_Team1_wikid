@@ -82,7 +82,7 @@ export function WikiPageView({
             className={`min-w-0 max-w-full max-[744px]:contents max-[744px]:w-full min-[745px]:flex min-[745px]:flex-col ${profileEdit.isEditMode ? 'min-[745px]:w-[1120px]' : 'min-[745px]:w-[860px]'}`}
           >
             {!profileEdit.isEditMode && (
-              <div className="max-[744px]:order-0 min-w-0 max-w-full">
+              <div className="max-[744px]:order-0 min-w-0 w-full max-w-full">
                 <WikiNameAndLink
                   name={profile.name}
                   linkDisplayText={linkDisplayText}
@@ -102,8 +102,8 @@ export function WikiPageView({
               </div>
             )}
 
-            <div className="max-[744px]:order-2 min-w-0 max-w-full">
-              <div className="mt-6 min-w-0 max-w-full">
+            <div className="max-[744px]:order-2 max-[744px]:relative max-[744px]:z-10 min-w-0 max-w-full">
+              <div className="mt-6 min-w-0 w-full max-w-full">
                 <WikiContentArea
                   isEditMode={profileEdit.isEditMode}
                   hasContent={hasContent}
@@ -117,6 +117,8 @@ export function WikiPageView({
                   onEditorImageSelect={onEditorImageSelect}
                   onEditorVideoInsert={onEditorVideoInsert}
                   onStartEdit={onStartEdit}
+                  onSave={profileEdit.handleSave}
+                  onCancel={profileEdit.handleCancel}
                   sessionTimeLeft={profileEdit.sessionTimeLeft}
                   formatSessionTime={profileEdit.formatSessionTime}
                 />
@@ -125,7 +127,7 @@ export function WikiPageView({
           </div>
         </div>
 
-        <div className="shrink-0 max-[744px]:w-full min-[745px]:mr-32 min-[1920px]:mr-32">
+        <div className="shrink-0 max-[744px]:order-1 max-[744px]:z-0 max-[744px]:w-full min-[745px]:mr-32 min-[1920px]:mr-32">
           <WikiProfileSidebar
             isEditMode={profileEdit.isEditMode}
             profile={profile}
