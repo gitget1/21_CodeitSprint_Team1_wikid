@@ -41,6 +41,7 @@ export default function MyPage() {
     reset: resetPassword,
   } = useForm<ChangePasswordForm>({
     resolver: zodResolver(changePasswordSchema),
+    mode: 'onChange',
   });
 
   const {

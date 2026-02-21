@@ -185,23 +185,25 @@ body {
   .text-xs-regular {
     @apply text-[12px] leading-4.5 font-normal;
   }
-}
-/* =========================
+
+  /* =========================
      XXS (10px/8px)
   ========================= */
-.text-xxs-bold {
-  @apply text-[10px] leading-4.5 font-bold;
-}
-.text-xxs-semibold {
-  @apply text-[10px] leading-4.5 font-semibold;
-}
+  .text-xxs-bold {
+    @apply text-[10px] leading-4.5 font-bold;
+  }
 
-.text-xxs-medium {
-  @apply text-[8px] leading-3.5 font-medium;
-}
+  .text-xxs-semibold {
+    @apply text-[10px] leading-4.5 font-semibold;
+  }
 
-.text-xxs-regular {
-  @apply text-[8px] leading-3.5 font-normal;
+  .text-xxs-medium {
+    @apply text-[8px] leading-3.5 font-medium;
+  }
+
+  .text-xxs-regular {
+    @apply text-[8px] leading-3.5 font-normal;
+  }
 }
 
 @layer base {

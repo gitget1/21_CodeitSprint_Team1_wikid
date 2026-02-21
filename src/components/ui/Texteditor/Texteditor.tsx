@@ -95,7 +95,7 @@ function TextEditor({
       className="w-full rounded-2xl pt-[46px] px-[30px] flex flex-col justify-between min-h-screen bg-white
        md:shadow-[0_4px_12px_rgba(0,0,0,0.08)] md:ring-1 md:ring-black/5"
     >
-      <div>
+      <div className="flex flex-col flex-1">
         <div>
           <div className="flex justify-between">
             <div>
@@ -142,11 +142,11 @@ function TextEditor({
           </span>
         </div>
 
-        <div className="mt-[12px]">
+        <div className="mt-[12px] flex flex-col flex-1">
           <span className="text-base font-medium text-[rgb(59_65_91)]">
             공백포함 : 총 {titleLength}자 | 공백제외 : 총 {titleLengthNoSpace}자
           </span>
-          <div>
+          <div className="flex flex-col flex-1">
             {previewImage && (
               <div className="mt-3">
                 <img src={previewImage} alt="preview" className="max-h-48 rounded-lg border" />
@@ -157,7 +157,7 @@ function TextEditor({
               onChange={(e) => onContentChange(e.target.value)}
               disabled={inputDisabled}
               placeholder="본문을 입력해 주세요"
-              className="font-normal pt-[12px] text-[20px] resize-none placeholder:text-[rgb(143_149_178)]  w-full  focus:ring-0 focus:outline-none "
+              className="flex-1 font-normal pt-[12px] text-[20px] resize-none placeholder:text-[rgb(143_149_178)] w-full focus:ring-0 focus:outline-none"
             />
           </div>
         </div>
