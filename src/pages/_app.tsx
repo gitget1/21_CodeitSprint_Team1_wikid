@@ -29,6 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </PageLayout>
         <SnackbarContainer />
+        <AlertDialogContainer />
       </div>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

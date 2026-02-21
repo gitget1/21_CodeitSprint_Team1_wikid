@@ -21,6 +21,8 @@ export interface WikiContentAreaProps {
   onEditorImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onEditorVideoInsert: () => void;
   onStartEdit: () => void;
+  sessionTimeLeft?: number;
+  formatSessionTime?: () => string;
 }
 
 export function WikiContentArea({
@@ -36,6 +38,8 @@ export function WikiContentArea({
   onEditorImageSelect,
   onEditorVideoInsert,
   onStartEdit,
+  sessionTimeLeft,
+  formatSessionTime,
 }: WikiContentAreaProps) {
   const [, setToolbarTick] = useState(0);
 
@@ -68,6 +72,8 @@ export function WikiContentArea({
           onToolbarChange={() => setToolbarTick((t) => t + 1)}
           editorImageInputRef={editorImageInputRef}
           onEditorVideoInsert={onEditorVideoInsert}
+          sessionTimeLeft={sessionTimeLeft}
+          formatSessionTime={formatSessionTime}
         />
         <WikiEditorBody
           editorContentRef={editorContentRef}

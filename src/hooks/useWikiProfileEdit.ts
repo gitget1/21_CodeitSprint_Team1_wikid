@@ -3,9 +3,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ping, releaseProfilePing, updateProfile } from '@/api/wiki.api';
 import { uploadImage } from '@/api/image.api';
 import { isValidImage } from '@/utils/wiki.utils';
-import { PING_INTERVAL_MS, EDIT_SESSION_TIMEOUT_MS } from '@/utils/wiki.constants';
+import { PING_INTERVAL_MS } from '@/utils/wiki.constants';
 import { useNotificationTriggerStore, useNotificationListStore } from '@/stores/notification.store';
+import { useTimer } from '@/hooks/useTimer';
 import type { Profile, UpdateProfileRequest } from '@/types/wiki.types';
+
+const EDIT_SESSION_SECONDS = 5 * 60;
 
 export interface UseWikiProfileEditParams {
   code: string | undefined;
@@ -35,26 +38,34 @@ export function useWikiProfileEdit({
 
   const securityAnswerRef = useRef('');
   const pingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const inactivityTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const profileImageInputRef = useRef<HTMLInputElement>(null);
   const triggerNotificationRefetch = useNotificationTriggerStore((s) => s.triggerRefetch);
   const addLocalNotification = useNotificationListStore((s) => s.addLocalNotification);
 
+  const sessionEndRef = useRef<() => void>(() => {});
+  sessionEndRef.current = () => {
+    if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
+    pingIntervalRef.current = null;
+    if (code) releaseProfilePing(code).catch(() => {});
+    setIsTimeoutOpen(true);
+    setIsEditMode(false);
+  };
+
+  const {
+    reset: resetSessionTimer,
+    start: startSessionTimer,
+    pause: pauseSessionTimer,
+    formatTime: formatSessionTime,
+    timeLeft: sessionTimeLeft,
+  } = useTimer({
+    initialTime: EDIT_SESSION_SECONDS,
+    onTimeEnd: () => sessionEndRef.current(),
+  });
+
   const resetInactivityTimer = useCallback(() => {
-    if (inactivityTimeoutRef.current) clearTimeout(inactivityTimeoutRef.current);
-    inactivityTimeoutRef.current = setTimeout(async () => {
-      if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
-      if (code) {
-        try {
-          await releaseProfilePing(code);
-        } catch {
-          /* 백엔드 미지원 시 무시 */
-        }
-      }
-      setIsTimeoutOpen(true);
-      setIsEditMode(false);
-    }, EDIT_SESSION_TIMEOUT_MS);
-  }, [code]);
+    resetSessionTimer();
+    startSessionTimer();
+  }, [resetSessionTimer, startSessionTimer]);
 
   const updateField = useCallback(
     (key: string, value: string) => {
@@ -89,13 +100,13 @@ export function useWikiProfileEdit({
       }
     };
     pingIntervalRef.current = setInterval(doPing, PING_INTERVAL_MS);
-    // 5분 비활성 타임아웃: 편집(입력 등) 시 resetInactivityTimer()로 리셋됨
+    startSessionTimer();
     resetInactivityTimer();
     return () => {
       if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
-      if (inactivityTimeoutRef.current) clearTimeout(inactivityTimeoutRef.current);
+      pauseSessionTimer();
     };
-  }, [isEditMode, code, resetInactivityTimer]);
+  }, [isEditMode, code, resetInactivityTimer, startSessionTimer, pauseSessionTimer]);
 
   const handleQuizSubmit = useCallback(
     async (answer: string) => {
@@ -150,6 +161,7 @@ export function useWikiProfileEdit({
       }
       addLocalNotification('내 위키가 수정되었습니다.');
       triggerNotificationRefetch();
+      showSnackbar('저장되었습니다.', 'success');
     } catch {
       showSnackbar('저장에 실패했습니다.', 'error');
     }
@@ -189,7 +201,6 @@ export function useWikiProfileEdit({
         const { url } = await uploadImage(file);
         if (url) {
           updateField('image', url);
-          setProfileImageUrl(url);
           setPreviewDataUrl(null);
           showSnackbar('프로필 이미지가 변경되었습니다.', 'success');
         } else {
@@ -201,7 +212,7 @@ export function useWikiProfileEdit({
       }
       e.target.value = '';
     },
-    [updateField, showSnackbar, setProfileImageUrl]
+    [updateField, showSnackbar]
   );
 
   return {
@@ -229,5 +240,7 @@ export function useWikiProfileEdit({
     handleProfileImageSelect,
     pingIntervalRef,
     securityAnswerRef,
+    sessionTimeLeft,
+    formatSessionTime,
   };
 }
