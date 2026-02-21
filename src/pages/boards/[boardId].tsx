@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import useArticles from '@/hooks/useBoard';
 import { useArticleStore } from '@/stores/boards.store';
@@ -25,6 +25,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from '@/components/ui/AlertDialog/AlertDialog';
+import PostEditorToolbar from '@/components/ui/Texteditor/PostEditorToolbar';
 export default function BoardDetailPage() {
   const router = useRouter();
   const { boardId } = router.query;
@@ -90,7 +91,21 @@ export default function BoardDetailPage() {
     setEditContent(article.content ?? '');
     setEditImage(article.image ?? '');
     setPreviewImage(article.image ?? '');
+
+    lastSyncedHtmlRef.current = article.content ?? '';
+    if (editorRef.current) editorRef.current.innerHTML = article.content ?? '';
   }, [article]);
+  useEffect(() => {
+    const el = editorRef.current;
+    if (!el) return;
+
+    const isFocused = typeof document !== 'undefined' && document.activeElement === el;
+
+    if (!isFocused && editContent !== lastSyncedHtmlRef.current) {
+      el.innerHTML = editContent || '';
+      lastSyncedHtmlRef.current = editContent || '';
+    }
+  }, [editContent]);
   const moveList = () => {
     router.push('/boards');
   };
@@ -146,6 +161,41 @@ export default function BoardDetailPage() {
 
     return true;
   };
+  const cover = article?.image ?? '';
+  const rawHtml = article?.content ?? '';
+
+  const contentHtml = cover
+    ? rawHtml.replaceAll(
+        new RegExp(
+          `<img[^>]*src=["']${cover.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["'][^>]*>`,
+          'g'
+        ),
+        ''
+      )
+    : rawHtml;
+  const editorRef = useRef<HTMLDivElement | null>(null);
+  const lastSyncedHtmlRef = useRef<string>('');
+  const handleEditorInput = () => {
+    const html = editorRef.current?.innerHTML ?? '';
+    lastSyncedHtmlRef.current = html;
+    setEditContent(html);
+  };
+
+  const runEditorCommand = (fn: () => void) => {
+    const el = editorRef.current;
+    if (!el) return;
+    el.focus();
+    fn();
+    handleEditorInput();
+  };
+  useLayoutEffect(() => {
+    if (!isEditing) return;
+    const el = editorRef.current;
+    if (!el) return;
+
+    el.innerHTML = editContent || '';
+    lastSyncedHtmlRef.current = editContent || '';
+  }, [isEditing]);
   if (isLoading) return <BoardDetailSkeleton />;
   if (error) return <div>{error}</div>;
   return (
@@ -293,16 +343,29 @@ export default function BoardDetailPage() {
           size="wide"
         />
         {isEditing ? (
-          <textarea
-            value={editContent}
-            onChange={(e) => setEditContent(e.target.value)}
-            className="mt-4 w-full min-h-[160px] resize-none rounded-lg border border-gray-200 bg-white p-3 text-[14px] outline-none focus:border-[rgb(76_191_164)]"
-            placeholder="내용을 입력하세요"
-          />
-        ) : (
-          <div className="font-pretendard text-[16px] text-[rgb(71_77_102)] pt-[20px] pb-[30px]  whitespace-pre-wrap break-words">
-            {article?.content}
+          <div className="mt-4">
+            <div
+              ref={editorRef}
+              contentEditable
+              suppressContentEditableWarning
+              onInput={handleEditorInput}
+              onBlur={handleEditorInput}
+              className="w-full min-h-[160px] rounded-lg  bg-white p-3 text-[14px] outline-none focus:border-[rgb(76_191_164)]
+               whitespace-pre-wrap break-words
+               [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6
+               [&_img]:max-w-full [&_img]:h-auto"
+            />
+            <PostEditorToolbar
+              onImageClick={() => setIsImageModalOpen(true)}
+              runEditorCommand={runEditorCommand}
+              onToolbarChange={() => {}}
+            />
           </div>
+        ) : (
+          <div
+            className="font-pretendard text-[16px] text-[rgb(71_77_102)] pt-[20px] pb-[30px] break-words"
+            dangerouslySetInnerHTML={{ __html: contentHtml }}
+          />
         )}
       </div>
       <div className="flex justify-center mt-[60px]">

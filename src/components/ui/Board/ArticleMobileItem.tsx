@@ -11,7 +11,7 @@ export default function ArticleMobileItem({ article }: Props) {
   return (
     <Link href={`/boards/${article.id}`} className="block">
       <div className="rounded-[10px] border-b border-[rgb(228_229_240)] bg-white px-4 py-3">
-        <div className="text-[16px] font-semibold text-[rgb(71_77_102)] hover:text-blue-500">
+        <div className="text-[16px] font-semibold text-[rgb(71_77_102)] hover:text-blue-500  cursor-pointer">
           {article.title}
         </div>
 

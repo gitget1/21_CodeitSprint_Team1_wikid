@@ -13,7 +13,7 @@ export default function ArticleBestCard({ article }: Props) {
       <div className="min-w-[250px] border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.08)] rounded-[10px] h-[220px] flex flex-col">
         <img
           src={article.image || 'https://placehold.co/600x400?text=No+Image'}
-          className="w-full h-32 rounded-[10px]"
+          className="w-full h-[131px] aspect-video object-cover rounded-t-[10px]"
         />
 
         <div className="flex flex-col justify-center h-full w-full text-left px-4">
