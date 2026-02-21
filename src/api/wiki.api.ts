@@ -59,32 +59,29 @@ export const updateProfile = async (code: string, data: UpdateProfileRequest): P
 
 /**
  * 프로필 수정 중 체크 (GET /profiles/{code}/ping)
- * - 200 + body: 수정 중 (registeredAt, userId)
- * - 204 No Content 또는 body 없음: 수정 중인 사람 없음 → null 반환
+ * - 200 + body: 수정 중 → { registeredAt, userId }
+ * - 204 또는 body 없음: 수정 중인 사람 없음 → null
  */
 export const getProfilePing = async (code: string): Promise<ProfilePingResponse | null> => {
   const response = await instance.get(`/profiles/${code}/ping`);
-  if (response.status === 204 || response.data == null) return null;
-  const data = response.data as ProfilePingResponse;
-  if (data.userId == null && (data as { user_id?: number }).user_id == null) return null;
-  return data;
+  const { status, data } = response;
+  if (status === 204 || data == null || data === '') return null;
+  if (typeof data !== 'object') return null;
+  const userId = data.userId ?? data.user_id;
+  const registeredAt = data.registeredAt ?? data.registered_at ?? '';
+  if (userId != null) return { registeredAt, userId };
+  if (registeredAt) return { registeredAt, userId: 0 };
+  return null;
 };
 
 /**
  * 프로필 수정 중 갱신 (POST /profiles/{code}/ping)
- * - 퀴즈 정답 시 최초 1회 호출해 수정 권한 획득
- * - 이후 프로필 수정 중일 때 주기적으로 호출해 5분 동안 수정 중 상태 유지
- * - 5분 이내 갱신하지 않으면 프로필 수정 불가
+ * - body: { securityAnswer: string }
+ * - 프로필 수정 중 상태를 갱신합니다. 5분 동안 프로필 수정 중 상태를 유지합니다.
+ * - 5분 이내에 갱신하지 않을 경우 프로필 수정이 불가능합니다.
+ * - 퀴즈 정답 시 최초 1회 호출해 수정 권한 획득, 이후 주기적으로 호출해 갱신
  */
 export const ping = async (code: string, securityAnswer: string): Promise<ProfilePingResponse> => {
   const response = await instance.post(`/profiles/${code}/ping`, { securityAnswer });
   return response.data;
-};
-
-/**
- * 프로필 수정 세션 해제 (DELETE /profiles/{code}/ping)
- * - 타임아웃/취소/확인 시 호출해 즉시 '아무도 수정 중이 아님' 상태로 되돌림
- */
-export const releaseProfilePing = async (code: string): Promise<void> => {
-  await instance.delete(`/profiles/${code}/ping`);
 };

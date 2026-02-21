@@ -34,8 +34,8 @@ export function WikiProfileSidebar({
   markProfileImageFailed,
   updateField,
   onProfileImageSelect,
-  onSave,
-  onCancel,
+  onSave: _onSave,
+  onCancel: _onCancel,
 }: WikiProfileSidebarProps) {
   const [expanded744, setExpanded744] = useState(false);
   const imageUrl =
@@ -203,39 +203,6 @@ export function WikiProfileSidebar({
     </div>
   );
 
-  const buttonPair = (
-    <>
-      <div
-        role="button"
-        tabIndex={0}
-        onClick={onCancel}
-        onKeyDown={(e) => e.key === 'Enter' && onCancel()}
-        className="h-10 w-[65px] shrink-0 rounded-[10px] border-2 border-[#32a68a] text-sm font-semibold text-[#32a68a] hover:bg-gray-50 flex items-center justify-center cursor-pointer select-none"
-      >
-        취소
-      </div>
-      <button
-        type="button"
-        onClick={onSave}
-        className="h-10 w-[65px] shrink-0 rounded-[10px] bg-primary-green-200 text-sm font-semibold text-white hover:bg-primary-green-300"
-      >
-        저장
-      </button>
-    </>
-  );
-
-  const profileCardButtons = isEditMode && isMyWiki && (
-    <div className="mt-4 flex w-full justify-end gap-2 min-[745px]:flex max-[744px]:hidden">
-      {buttonPair}
-    </div>
-  );
-
-  const profileCardButtonsTop744 = isEditMode && isMyWiki && (
-    <div className="mb-2 flex w-full justify-end gap-2 max-[744px]:flex min-[745px]:hidden">
-      {buttonPair}
-    </div>
-  );
-
   return (
     <aside
       className={`min-w-0 shrink-0 max-[744px]:order-1 max-[744px]:w-full max-[744px]:max-w-[744px] ${isEditMode ? 'min-[745px]:w-[400px]' : 'min-[745px]:w-[280px]'}`}
@@ -249,7 +216,6 @@ export function WikiProfileSidebar({
         aria-hidden
       />
       <div className="max-[744px]:rounded-[10px] max-[744px]:border max-[744px]:border-gray-200 max-[744px]:overflow-visible max-[744px]:bg-transparent min-[745px]:hidden">
-        {profileCardButtonsTop744}
         {!expanded744 && compactPreview}
         {expanded744 && (
           <>
@@ -266,10 +232,7 @@ export function WikiProfileSidebar({
           </>
         )}
       </div>
-      <div className="hidden min-[745px]:block w-full">
-        {fullSidebar}
-        {profileCardButtons}
-      </div>
+      <div className="hidden min-[745px]:block w-full">{fullSidebar}</div>
     </aside>
   );
 }

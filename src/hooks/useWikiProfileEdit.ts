@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { ping, releaseProfilePing, updateProfile } from '@/api/wiki.api';
+import { ping, updateProfile } from '@/api/wiki.api';
 import { uploadImage } from '@/api/image.api';
 import { isValidImage } from '@/utils/wiki.utils';
-import { PING_INTERVAL_MS } from '@/utils/wiki.constants';
 import { useNotificationTriggerStore, useNotificationListStore } from '@/stores/notification.store';
 import { useTimer } from '@/hooks/useTimer';
 import type { Profile, UpdateProfileRequest } from '@/types/wiki.types';
+
+const PING_THROTTLE_MS = 3 * 60 * 1000;
 
 const EDIT_SESSION_SECONDS = 5 * 60;
 
@@ -37,16 +38,23 @@ export function useWikiProfileEdit({
   const [isTimeoutOpen, setIsTimeoutOpen] = useState(false);
 
   const securityAnswerRef = useRef('');
-  const pingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const lastPingTimeRef = useRef(0);
   const profileImageInputRef = useRef<HTMLInputElement>(null);
+  const isEditModeRef = useRef(isEditMode);
+  isEditModeRef.current = isEditMode;
   const triggerNotificationRefetch = useNotificationTriggerStore((s) => s.triggerRefetch);
   const addLocalNotification = useNotificationListStore((s) => s.addLocalNotification);
 
+  // 다른 페이지로 이동하거나 컴포넌트 언마운트 시 편집 상태 정리
+  useEffect(() => {
+    return () => {
+      lastPingTimeRef.current = 0;
+    };
+  }, []);
+
   const sessionEndRef = useRef<() => void>(() => {});
   sessionEndRef.current = () => {
-    if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
-    pingIntervalRef.current = null;
-    if (code) releaseProfilePing(code).catch(() => {});
+    lastPingTimeRef.current = 0;
     setIsTimeoutOpen(true);
     setIsEditMode(false);
   };
@@ -67,12 +75,24 @@ export function useWikiProfileEdit({
     startSessionTimer();
   }, [resetSessionTimer, startSessionTimer]);
 
+  const throttledPing = useCallback(() => {
+    if (!code || !securityAnswerRef.current) return;
+    const now = Date.now();
+    if (now - lastPingTimeRef.current < PING_THROTTLE_MS) return;
+    lastPingTimeRef.current = now;
+    ping(code, securityAnswerRef.current).catch(() => {
+      setIsTimeoutOpen(true);
+      setIsEditMode(false);
+    });
+  }, [code]);
+
   const updateField = useCallback(
     (key: string, value: string) => {
       setEditForm((prev) => ({ ...prev, [key]: value }));
       resetInactivityTimer();
+      throttledPing();
     },
-    [resetInactivityTimer]
+    [resetInactivityTimer, throttledPing]
   );
 
   const markProfileImageFailed = useCallback((url: string) => {
@@ -90,23 +110,12 @@ export function useWikiProfileEdit({
   }, [isEditMode]);
 
   useEffect(() => {
-    if (!isEditMode || !code) return;
-    const doPing = async () => {
-      try {
-        await ping(code, securityAnswerRef.current);
-      } catch {
-        setIsTimeoutOpen(true);
-        setIsEditMode(false);
-      }
-    };
-    pingIntervalRef.current = setInterval(doPing, PING_INTERVAL_MS);
-    startSessionTimer();
+    if (!isEditMode) return;
     resetInactivityTimer();
     return () => {
-      if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
       pauseSessionTimer();
     };
-  }, [isEditMode, code, resetInactivityTimer, startSessionTimer, pauseSessionTimer]);
+  }, [isEditMode, resetInactivityTimer, pauseSessionTimer]);
 
   const handleQuizSubmit = useCallback(
     async (answer: string) => {
@@ -132,8 +141,13 @@ export function useWikiProfileEdit({
           });
         }
         setIsEditMode(true);
-      } catch {
-        setQuizError('퀴즈 정답이 아닙니다.');
+      } catch (err: unknown) {
+        const status = (err as { response?: { status?: number } })?.response?.status;
+        if (status === 401) {
+          setQuizError('인증이 만료되었습니다. 다시 로그인해 주세요.');
+        } else {
+          setQuizError('퀴즈 정답이 아닙니다.');
+        }
       } finally {
         setQuizLoading(false);
       }
@@ -155,7 +169,7 @@ export function useWikiProfileEdit({
       });
       setProfile(updated);
       setIsEditMode(false);
-      if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
+      lastPingTimeRef.current = 0;
       if (isMyWiki && isValidImage(updated.image)) {
         setProfileImageUrl(updated.image);
       }
@@ -178,9 +192,8 @@ export function useWikiProfileEdit({
 
   const handleCancel = useCallback(() => {
     setIsEditMode(false);
-    if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
-    if (code) releaseProfilePing(code).catch(() => {});
-  }, [code]);
+    lastPingTimeRef.current = 0;
+  }, []);
 
   const handleProfileImageSelect = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -238,7 +251,6 @@ export function useWikiProfileEdit({
     handleSave,
     handleCancel,
     handleProfileImageSelect,
-    pingIntervalRef,
     securityAnswerRef,
     sessionTimeLeft,
     formatSessionTime,

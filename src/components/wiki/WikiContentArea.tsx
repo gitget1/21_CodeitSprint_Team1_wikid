@@ -21,6 +21,8 @@ export interface WikiContentAreaProps {
   onEditorImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onEditorVideoInsert: () => void;
   onStartEdit: () => void;
+  onSave?: () => void;
+  onCancel?: () => void;
   sessionTimeLeft?: number;
   formatSessionTime?: () => string;
 }
@@ -29,7 +31,7 @@ export function WikiContentArea({
   isEditMode,
   hasContent,
   profile,
-  editForm,
+  editForm: _editForm,
   editorContentRef,
   editorImageInputRef,
   updateField,
@@ -38,6 +40,8 @@ export function WikiContentArea({
   onEditorImageSelect,
   onEditorVideoInsert,
   onStartEdit,
+  onSave,
+  onCancel,
   sessionTimeLeft,
   formatSessionTime,
 }: WikiContentAreaProps) {
@@ -66,12 +70,12 @@ export function WikiContentArea({
       <div className="w-[1120px] max-w-full rounded-[10px] border border-gray-200 bg-white overflow-hidden">
         <WikiEditorToolbar
           profile={profile}
-          editForm={editForm}
-          updateField={updateField}
           runEditorCommand={runEditorCommand}
           onToolbarChange={() => setToolbarTick((t) => t + 1)}
           editorImageInputRef={editorImageInputRef}
           onEditorVideoInsert={onEditorVideoInsert}
+          onSave={onSave}
+          onCancel={onCancel}
           sessionTimeLeft={sessionTimeLeft}
           formatSessionTime={formatSessionTime}
         />
