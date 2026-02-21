@@ -52,10 +52,7 @@ export default function WikilistPage() {
         />
 
         {/* 검색 결과 메시지 (결과가 있을 때만) */}
-        <div className={searchTerm && wikiList.length > 0 
-          ? "lg:mb-[57px] md:mb-[100px] mb-10" 
-          : "lg:mt-[97px] md:mt-[140px] mt-[69px]" 
-        }>
+        <div className="lg:h-[80px] md:h-[100px] h-[60px] flex flex-col justify-center">
           {searchTerm && wikiList.length > 0 && (
             <p className="text-[#8F95B2] lg:mt-[16px] md:mt-[20px] mt-[15px] lg:text-[16px] md:text-[16px] text-[14px] px-3.75 font-normal">
               "{searchTerm}"님을 총 <span className="font-normal text-primary-green-200">{totalCount}명</span> 찾았습니다.
