@@ -1,0 +1,69 @@
+import { useRef, useState } from 'react';
+
+import { useOutsideClick } from '@/hooks/useOutsideClick';
+
+interface Option {
+  label: string;
+  value: string;
+}
+
+interface DropdownProps {
+  options: Option[];
+  placeholder?: string;
+  value?: string;
+  className?: string;
+  onChange?: (value: string) => void;
+}
+
+const Dropdown = ({ options, value, className, placeholder, onChange }: DropdownProps) => {
+  const [open, setOpen] = useState(false);
+  const selected = options.find((e) => e.value === value);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useOutsideClick(dropdownRef, () => setOpen(false));
+  return (
+    <div ref={dropdownRef} className={`relative ${className}`}>
+      <div
+        onClick={() => setOpen((prev) => !prev)}
+        className=" min-w-[120px] h-[45px] px-[20px] rounded-[10px] text-sm border border-gray-300
+bg-white flex items-center justify-between"
+      >
+        <span className={selected ? 'text-gray-900' : 'text-gray-400 '}>
+          {selected?.label || placeholder}
+        </span>
+        <span className="text-gray-400">▾</span>{' '}
+      </div>
+      {open && (
+        <div
+          className="absolute
+        top-full
+        left-0
+        mt-[4px]
+        w-full
+        rounded-[10px]
+        border border-gray-300
+        bg-white
+        shadow-md
+        z-50
+        flex flex-col"
+        >
+          {options.map((option) => (
+            <div
+              key={option.value}
+              onClick={() => {
+                onChange?.(option.value);
+                setOpen(false);
+              }}
+              className=" font-normal text-sm leading-[24px]
+         indent-[20px] hover:bg-green-100 cursor-pointer  h-[35px] flex items-center"
+            >
+              {option.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Dropdown;
