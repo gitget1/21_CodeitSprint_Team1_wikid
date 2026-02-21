@@ -220,10 +220,10 @@ export default function BoardDetailPage() {
                 variant="primary"
                 onClick={async () => {
                   if (!guardOwner()) return;
-                  if (!confirm('정말 삭제할까요?')) return;
-
-                  const ok = await removeArticle(article!.id);
-                  if (ok) router.push('/boards');
+                  openDialog('deleteConfirm', '정말 삭제할까요?', async () => {
+                    const ok = await removeArticle(article!.id);
+                    if (ok) router.push('/boards');
+                  });
                 }}
               >
                 삭제하기
@@ -300,7 +300,7 @@ export default function BoardDetailPage() {
             placeholder="내용을 입력하세요"
           />
         ) : (
-          <div className="font-pretendard text-[16px] text-[rgb(71_77_102)] pt-[20px] pb-[30px]">
+          <div className="font-pretendard text-[16px] text-[rgb(71_77_102)] pt-[20px] pb-[30px]  whitespace-pre-wrap break-words">
             {article?.content}
           </div>
         )}
