@@ -18,6 +18,7 @@ export default function LoginPage() {
     formState: { isSubmitting, isSubmitted, errors },
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
+    mode: 'onChange',
   });
   const signIn = useSignIn();
   const router = useRouter();

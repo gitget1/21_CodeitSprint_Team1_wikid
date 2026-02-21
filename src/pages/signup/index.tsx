@@ -16,6 +16,7 @@ export default function SignupPage() {
     formState: { isSubmitting, isSubmitted, errors },
   } = useForm<SignupForm>({
     resolver: zodResolver(signupSchema),
+    mode: 'onChange',
   });
 
   const signUp = useSignUp();

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 
 import useArticles from '@/hooks/useBoard';
 import { useArticleStore } from '@/stores/boards.store';
-import ProfileIcon from '@/assets/icons/Profile.svg';
 import DeleteIcon from '@/assets/icons/Delete.svg';
 import EditIcon from '@/assets/icons/Edit.svg';
 import LikesIcon from '@/assets/icons/ic_heart.svg';
@@ -15,6 +14,17 @@ import CommentCard from '@/components/ui/Comment/CommentCard';
 import ImageIcon from '@/assets/icons/ic_image.svg';
 import { ImageInsertModal } from '@/components/ui/Modal/Modal';
 import { uploadImage } from '@/api/image.api';
+import BoardDetailSkeleton from '@/components/ui/Skeleton/BoardDetailSkeleton';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from '@/components/ui/AlertDialog/AlertDialog';
 export default function BoardDetailPage() {
   const router = useRouter();
   const { boardId } = router.query;
@@ -32,6 +42,18 @@ export default function BoardDetailPage() {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const MAX = 500;
   const { isLoggedIn, user } = useAuthStore();
+  type DialogType = 'login' | 'notOwner' | 'deleteConfirm' | 'uploadFail';
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogType, setDialogType] = useState<DialogType>('login');
+  const [dialogMessage, setDialogMessage] = useState<string>('');
+  const [afterAction, setAfterAction] = useState<null | (() => void)>(null);
+  const openDialog = (type: DialogType, message: string, onConfirm?: () => void) => {
+    setDialogType(type);
+    setDialogMessage(message);
+    setAfterAction(() => onConfirm ?? null);
+    setDialogOpen(true);
+  };
   const isLiked =
     typeof article === 'object' &&
     article !== null &&
@@ -43,8 +65,7 @@ export default function BoardDetailPage() {
     if (!article) return;
 
     if (!isLoggedIn) {
-      alert('로그인 후 이용할 수 있어요.');
-      router.push('/login');
+      openDialog('login', '로그인 후 이용할 수 있어요.', () => router.push('/login'));
       return;
     }
 
@@ -107,25 +128,26 @@ export default function BoardDetailPage() {
       setPreviewImage(res.url);
     } catch (e) {
       const message = e instanceof Error ? e.message : '이미지 업로드 실패';
-      alert(message);
+      openDialog('uploadFail', message);
     } finally {
       URL.revokeObjectURL(preview);
     }
   };
   const guardOwner = () => {
     if (!isLoggedIn) {
-      alert('로그인 후 이용할 수 있어요.');
-      router.push('/login');
+      openDialog('login', '로그인 후 이용할 수 있어요.', () => router.push('/login'));
       return false;
     }
 
     if (!article || article.writer?.id !== user?.id) {
-      alert('작성자만 수정/삭제할 수 있어요.');
+      openDialog('notOwner', '작성자만 수정/삭제할 수 있어요.');
       return false;
     }
 
     return true;
   };
+  if (isLoading) return <BoardDetailSkeleton />;
+  if (error) return <div>{error}</div>;
   return (
     <div className="w-full mx-auto max-w-4xl px-4 py-8">
       <div className=" px-[30px] border border-gray-100 shadow-[0_4px_12px_rgba(0,0,0,0.08)] rounded-[10px]">
@@ -155,10 +177,10 @@ export default function BoardDetailPage() {
                 className="p-2 rounded hover:bg-gray-100"
                 onClick={async () => {
                   if (!guardOwner()) return;
-                  if (!confirm('정말 삭제할까요?')) return;
-
-                  const ok = await removeArticle(article!.id);
-                  if (ok) router.push('/boards');
+                  openDialog('deleteConfirm', '정말 삭제할까요?', async () => {
+                    const ok = await removeArticle(article!.id);
+                    if (ok) router.push('/boards');
+                  });
                 }}
               >
                 <DeleteIcon className="w-5 h-5" />
@@ -198,10 +220,10 @@ export default function BoardDetailPage() {
                 variant="primary"
                 onClick={async () => {
                   if (!guardOwner()) return;
-                  if (!confirm('정말 삭제할까요?')) return;
-
-                  const ok = await removeArticle(article!.id);
-                  if (ok) router.push('/boards');
+                  openDialog('deleteConfirm', '정말 삭제할까요?', async () => {
+                    const ok = await removeArticle(article!.id);
+                    if (ok) router.push('/boards');
+                  });
                 }}
               >
                 삭제하기
@@ -278,7 +300,7 @@ export default function BoardDetailPage() {
             placeholder="내용을 입력하세요"
           />
         ) : (
-          <div className="font-pretendard text-[16px] text-[rgb(71_77_102)] pt-[20px] pb-[30px]">
+          <div className="font-pretendard text-[16px] text-[rgb(71_77_102)] pt-[20px] pb-[30px]  whitespace-pre-wrap break-words">
             {article?.content}
           </div>
         )}
@@ -328,6 +350,59 @@ export default function BoardDetailPage() {
           <CommentCard key={c.id} comment={c} />
         ))}
       </div>
+      <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {dialogType === 'deleteConfirm'
+                ? '삭제 확인'
+                : dialogType === 'login'
+                  ? '로그인이 필요해요'
+                  : dialogType === 'notOwner'
+                    ? '권한이 없어요'
+                    : '알림'}
+            </AlertDialogTitle>
+
+            <AlertDialogDescription>{dialogMessage}</AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            {dialogType === 'deleteConfirm' ? (
+              <>
+                <AlertDialogCancel asChild>
+                  <Button variant="secondary">취소</Button>
+                </AlertDialogCancel>
+
+                <AlertDialogAction
+                  onClick={async () => {
+                    if (!afterAction) return;
+                    await afterAction();
+                  }}
+                >
+                  삭제하기
+                </AlertDialogAction>
+              </>
+            ) : dialogType === 'login' ? (
+              <>
+                <AlertDialogCancel asChild>
+                  <Button variant="secondary">취소</Button>
+                </AlertDialogCancel>
+
+                <AlertDialogAction
+                  onClick={async () => {
+                    if (!afterAction) return;
+                    await afterAction();
+                  }}
+                >
+                  로그인 하러가기
+                </AlertDialogAction>
+              </>
+            ) : (
+              <AlertDialogAction>확인</AlertDialogAction>
+            )}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

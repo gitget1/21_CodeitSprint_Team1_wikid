@@ -17,7 +17,7 @@ export default function ArticleBestCard({ article }: Props) {
         />
 
         <div className="flex flex-col justify-center h-full w-full text-left px-4">
-          <div className="text-[rgb(71_77_102)] font-semibold text-[18px] leading-[26px]">
+          <div className="text-[rgb(71_77_102)] font-semibold text-[18px] leading-[26px] line-clamp-2">
             {article.title}
           </div>
 
