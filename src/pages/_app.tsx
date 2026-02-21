@@ -8,6 +8,7 @@ import '@/styles/globals.css';
 import { nexonGothic } from '@/styles/nexonfont';
 import PageLayout from '@/components/layout/PageLayout';
 import SnackbarContainer from '@/components/ui/Snackbar/Snackbar';
+import AlertDialogContainer from '@/components/ui/AlertDialog/AlertDialogContainer';
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
