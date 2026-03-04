@@ -1,23 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-import BoldIcon from '@/assets/icons/ic_bold.svg';
-import AlignIcon from '@/assets/icons/ic_align.svg';
-import BulletIcon from '@/assets/icons/ic_bullet.svg';
-import ImageIcon from '@/assets/icons/ic_image.svg';
-import ItalicIcon from '@/assets/icons/ic_italic.svg';
-import NumberIcon from '@/assets/icons/ic_number.svg';
-import UnderlineIcon from '@/assets/icons/ic_underline.svg';
-import LinkIcon from '@/assets/icons/ic_link.svg';
 import { uploadImage } from '@/api/image.api';
 
 import Button from '../Button/Button';
 import { ImageInsertModal } from '../Modal/Modal';
+
+import PostEditorToolbar from './PostEditorToolbar';
 
 export interface PostComposerProps {
   /** 값 (controlled) */
   title: string;
   content: string;
   image: string;
+
   /** 변경 이벤트 */
   onTitleChange: (value: string) => void;
   onContentChange: (value: string) => void;
@@ -40,9 +35,17 @@ export interface PostComposerProps {
   maxTitleLength?: number;
 }
 
+function stripHtmlToText(html: string) {
+  if (typeof document === 'undefined') return html;
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent ?? '';
+}
+
 function TextEditor({
   title,
   content,
+  image,
   onTitleChange,
   onContentChange,
   onSubmitClick,
@@ -55,16 +58,63 @@ function TextEditor({
   disabled = false,
   maxTitleLength = 30,
 }: PostComposerProps) {
+  const editorRef = useRef<HTMLDivElement | null>(null);
+
+  const lastSyncedHtmlRef = useRef<string>('');
+
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string>(image || '');
+
   const titleCount = title.length;
   const titleOver = titleCount > maxTitleLength;
-  const titleLength = content.length;
-  const titleLengthNoSpace = content.replace(/\s/g, '').length;
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-  const [InputImage, setInputImage] = useState<string>('');
-  const [previewImage, setPreviewImage] = useState<string>('');
-  const isEmpty = !title.trim() || !content.trim();
+
+  const plainText = useMemo(() => stripHtmlToText(content), [content]);
+  const contentLength = plainText.length;
+  const contentLengthNoSpace = plainText.replace(/\s/g, '').length;
+
+  const isEmpty = !title.trim() || !plainText.trim();
   const inputDisabled = disabled || loading;
   const submitDisabled = disabled || loading || isEmpty || titleOver;
+
+  useEffect(() => {
+    const el = editorRef.current;
+    if (!el) return;
+
+    const isFocused = typeof document !== 'undefined' && document.activeElement === el;
+
+    if (!isFocused && content !== lastSyncedHtmlRef.current) {
+      el.innerHTML = content || '';
+      lastSyncedHtmlRef.current = content || '';
+    }
+  }, [content]);
+
+  const handleEditorInput = () => {
+    const html = editorRef.current?.innerHTML ?? '';
+    lastSyncedHtmlRef.current = html;
+    onContentChange(html);
+  };
+
+  const runEditorCommand = (fn: () => void) => {
+    const el = editorRef.current;
+    if (!el) return;
+
+    el.focus();
+    fn();
+
+    handleEditorInput();
+  };
+
+  const onToolbarChange = () => {};
+
+  const insertImageAtCaret = (url: string) => {
+    runEditorCommand(() => {
+      document.execCommand(
+        'insertHTML',
+        false,
+        `<img src="${url}" alt="" style="max-width:100%;height:auto;" />`
+      );
+    });
+  };
 
   const handleInsertImage = async (file: File | null) => {
     if (!file) return;
@@ -75,14 +125,12 @@ function TextEditor({
     try {
       const ext = file.name.split('.').pop()?.toLowerCase() || 'png';
       const safeName = `board_${Date.now()}.${ext}`;
-
       const safeFile = new File([file], safeName, { type: file.type });
 
       const res = await uploadImage(safeFile);
 
-      setInputImage(res.url);
-      setPreviewImage(res.url);
       onImageChange(res.url);
+      setPreviewImage(res.url);
     } catch (e) {
       const message = e instanceof Error ? e.message : '이미지 업로드 실패';
       alert(message);
@@ -90,6 +138,7 @@ function TextEditor({
       URL.revokeObjectURL(preview);
     }
   };
+
   return (
     <div
       className="w-full rounded-2xl pt-[46px] px-[30px] flex flex-col justify-between min-h-screen bg-white
@@ -99,27 +148,24 @@ function TextEditor({
         <div>
           <div className="flex justify-between">
             <div>
-              <h2
-                className="font-semibold text-2xl text-[rgb(71_77_102)]
-"
-              >
-                {heading}
-              </h2>
+              <h2 className="font-semibold text-2xl text-[rgb(71_77_102)]">{heading}</h2>
             </div>
 
             <Button
               onClick={onSubmitClick ?? onCancelClick}
               disabled={submitDisabled || (!onCancelClick && titleOver)}
             >
-              등록하기
+              {submitLabel}
             </Button>
           </div>
+
           {dateText && (
-            <p className=" font-normal text-base text-[rgb(143_149_178)] pt-[24px] flex gap-3">
+            <p className="font-normal text-base text-[rgb(143_149_178)] pt-[24px] flex gap-3">
               등록일 {dateText}
             </p>
           )}
         </div>
+
         <div className="flex justify-between border-y border-neutral-200 mt-[33px] py-[10px]">
           <div className="w-full">
             <input
@@ -127,8 +173,7 @@ function TextEditor({
               onChange={(e) => onTitleChange(e.target.value)}
               disabled={inputDisabled}
               placeholder="제목을 입력해 주세요"
-              className="font-medium text-[20px]  placeholder:text-[rgb(143_149_178)
-           focus:ring-0 focus:outline-none"
+              className="font-medium text-[20px] placeholder:text-[rgb(143_149_178)] focus:ring-0 focus:outline-none w-full"
             />
 
             {titleOver && (
@@ -137,53 +182,47 @@ function TextEditor({
               </p>
             )}
           </div>
-          <span className="">
+
+          <span>
             {titleCount}/<span className="text-[rgba(50_166_138)]">{maxTitleLength}</span>
           </span>
         </div>
 
         <div className="mt-[12px] flex flex-col flex-1">
           <span className="text-base font-medium text-[rgb(59_65_91)]">
-            공백포함 : 총 {titleLength}자 | 공백제외 : 총 {titleLengthNoSpace}자
+            공백포함 : 총 {contentLength}자 | 공백제외 : 총 {contentLengthNoSpace}자
           </span>
-          <div className="flex flex-col flex-1">
-            {previewImage && (
-              <div className="mt-3">
-                <img src={previewImage} alt="preview" className="max-h-48 rounded-lg border" />
-              </div>
-            )}
-            <textarea
-              value={content}
-              onChange={(e) => onContentChange(e.target.value)}
-              disabled={inputDisabled}
-              placeholder="본문을 입력해 주세요"
-              className="flex-1 font-normal pt-[12px] text-[20px] resize-none placeholder:text-[rgb(143_149_178)] w-full focus:ring-0 focus:outline-none"
-            />
-          </div>
-        </div>
-      </div>
-      <div className="flex justify-between border mb-[16px] px-[8px] border-gray-300 rounded-[21.5px] ">
-        <div className="flex gap-2.5">
-          <BoldIcon />
-          <AlignIcon />
-          <BulletIcon />
-          <ItalicIcon />
-          <NumberIcon />
-          <UnderlineIcon />
-          <button onClick={() => setIsImageModalOpen(true)}>
-            <ImageIcon />
-          </button>
 
-          <ImageInsertModal
-            isOpen={isImageModalOpen}
-            onClose={() => setIsImageModalOpen(false)}
-            onInsert={handleInsertImage}
-            size="wide"
+          {previewImage && (
+            <div className="mt-3">
+              <img src={previewImage} alt="preview" className="max-h-48 rounded-lg border" />
+            </div>
+          )}
+
+          <div
+            ref={editorRef}
+            contentEditable={!inputDisabled}
+            suppressContentEditableWarning
+            onInput={handleEditorInput}
+            onBlur={handleEditorInput}
+            className="flex-1 font-normal pt-[12px] text-[20px] w-full focus:outline-none min-h-[240px]
+                       whitespace-pre-wrap break-words"
+            data-placeholder="본문을 입력해 주세요"
           />
         </div>
-
-        <LinkIcon />
+        <PostEditorToolbar
+          onImageClick={() => setIsImageModalOpen(true)}
+          runEditorCommand={runEditorCommand}
+          onToolbarChange={onToolbarChange}
+        />
       </div>
+
+      <ImageInsertModal
+        isOpen={isImageModalOpen}
+        onClose={() => setIsImageModalOpen(false)}
+        onInsert={handleInsertImage}
+        size="wide"
+      />
     </div>
   );
 }

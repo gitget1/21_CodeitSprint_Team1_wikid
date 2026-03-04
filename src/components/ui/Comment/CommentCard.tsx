@@ -6,9 +6,18 @@ import { useAuthStore } from '@/stores/auth.store';
 import DeleteIcon from '@/assets/icons/Delete.svg';
 import EditIcon from '@/assets/icons/Edit.svg';
 import { Comment } from '@/types/comment.types';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from '@/components/ui/AlertDialog/AlertDialog';
 
 import Button from '../Button/Button';
-
 interface Props {
   comment: Comment;
 }
@@ -20,6 +29,18 @@ export default function CommentCard({ comment }: Props) {
   const [editingContent, setEditingContent] = useState('');
   const { patchComment, removeComment } = useComment();
   const MAX = 500;
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const handleDelete = async () => {
+    try {
+      setDeleteLoading(true);
+      await removeComment(comment.id);
+      setDeleteDialogOpen(false);
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
   return (
     <div className="flex px-5 py-5 rounded-[10px] shadow-[0_4px_20px_0_rgba(0,0,0,0.08)]">
       <div>
@@ -49,14 +70,7 @@ export default function CommentCard({ comment }: Props) {
               >
                 <EditIcon className="w-5 h-5 " />
               </button>
-              <button
-                className="hover:text-red-400"
-                onClick={async () => {
-                  if (!confirm('댓글을 삭제하시겠습니까?')) return;
-
-                  await removeComment(comment.id);
-                }}
-              >
+              <button className="hover:text-red-400" onClick={() => setDeleteDialogOpen(true)}>
                 <DeleteIcon className="w-5 h-5" />
               </button>
             </div>
@@ -109,6 +123,26 @@ export default function CommentCard({ comment }: Props) {
           {comment.createdAt?.slice(0, 10)}
         </div>
       </div>
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>삭제 확인</AlertDialogTitle>
+            <AlertDialogDescription>댓글을 삭제하시겠습니까?</AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel asChild>
+              <Button variant="secondary" disabled={deleteLoading}>
+                취소
+              </Button>
+            </AlertDialogCancel>
+
+            <AlertDialogAction onClick={handleDelete} disabled={deleteLoading}>
+              삭제하기
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -80,7 +80,7 @@ export default function BoardsPage() {
           게시물 등록하기
         </Button>
       </div>
-      <div className="mt-[60px] md:mt-[60px] md:flex md:justify-center">
+      <div className=" md:flex md:justify-center">
         <div className="overflow-hidden md:overflow-visible w-full">
           <div className="gap-4 mt-[60px] w-full flex md:grid md:grid-cols-2 md:overflow-visible lg:grid-cols-4">
             {articles &&
